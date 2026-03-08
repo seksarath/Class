@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevOps & Cloud Resource Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f0f4f8;--surface:#ffffff;--surface2:#f8fafc;--border:#e2e8f0;--border2:#cbd5e1;
+  --primary:#1e40af;--primary-light:#3b82f6;--primary-bg:#eff6ff;
+  --accent:#0891b2;--accent-bg:#ecfeff;
+  --success:#059669;--success-bg:#ecfdf5;
+  --warning:#d97706;--warning-bg:#fffbeb;
+  --danger:#dc2626;--danger-bg:#fef2f2;
+  --text:#0f172a;--text2:#334155;--muted:#64748b;--muted2:#94a3b8;
+  --folder:#d97706;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);
+  --shadow:0 4px 16px rgba(0,0,0,0.08),0 2px 6px rgba(0,0,0,0.05);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.12),0 4px 12px rgba(0,0,0,0.06);
+  --radius:12px;--radius-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* LOGIN */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#dbeafe 0%,#f0f9ff 40%,#ecfdf5 100%);padding:20px;position:relative;overflow:hidden;}
+#loginScreen::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.08) 0%,transparent 70%);top:-200px;right:-200px;pointer-events:none;}
+#loginScreen::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(8,145,178,0.07) 0%,transparent 70%);bottom:-100px;left:-100px;pointer-events:none;}
+.login-card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow-lg);width:100%;max-width:420px;overflow:hidden;animation:slideUp 0.5s ease both;position:relative;z-index:1;}
+.login-header{background:linear-gradient(135deg,var(--primary) 0%,#1d4ed8 100%);padding:36px 36px 28px;text-align:center;}
+.login-logo{width:56px;height:56px;background:rgba(255,255,255,0.2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.3);}
+.login-title{font-family:'Playfair Display',serif;font-size:22px;color:#fff;font-weight:700;line-height:1.2;margin-bottom:6px;}
+.login-subtitle{font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:.05em;}
+.login-body{padding:32px 36px 36px;}
+.tab-row{display:flex;background:var(--bg);border-radius:var(--radius-sm);padding:4px;margin-bottom:24px;gap:4px;}
+.tab-btn{flex:1;background:none;border:none;padding:8px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;}
+.tab-btn.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow-sm);}
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:7px;letter-spacing:.04em;text-transform:uppercase;}
+.form-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
+.form-input:focus{border-color:var(--primary-light);box-shadow:0 0 0 3px rgba(59,130,246,.1);}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--primary) 0%,#2563eb 100%);color:white;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(30,64,175,.3);margin-top:4px;}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(30,64,175,.4);}
+.login-error{background:var(--danger-bg);border:1px solid #fecaca;color:var(--danger);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin-top:14px;display:none;text-align:center;}
+.demo-hint{margin-top:20px;background:var(--primary-bg);border:1px solid #bfdbfe;border-radius:var(--radius-sm);padding:12px 14px;font-size:11.5px;color:var(--primary);line-height:1.7;}
+.demo-hint strong{font-weight:600;}
+
+/* TOPNAV */
+#appScreen{display:none;min-height:100vh;}
+.topnav{background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:50;}
+.topnav-inner{max-width:1300px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.nav-brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.brand-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(30,64,175,.25);}
+.brand-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);line-height:1.2;}
+.brand-sub{font-size:10px;color:var(--muted);font-weight:400;font-family:'DM Sans',sans-serif;letter-spacing:.05em;}
+.nav-search{flex:1;max-width:380px;position:relative;}
+.nav-search input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;padding:8px 16px 8px 38px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
+.nav-search input:focus{border-color:var(--primary-light);}
+.nav-search input::placeholder{color:var(--muted2);}
+.nav-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.user-pill{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:24px;padding:5px 12px 5px 6px;font-size:13px;}
+.user-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;}
+.avatar-admin{background:linear-gradient(135deg,var(--primary),var(--accent));}
+.avatar-user{background:linear-gradient(135deg,var(--success),#10b981);}
+.user-name{font-weight:500;color:var(--text2);}
+.user-role{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+.role-admin{background:var(--primary-bg);color:var(--primary);}
+.role-user{background:var(--success-bg);color:var(--success);}
+.btn-icon{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .2s;color:var(--muted);}
+.btn-icon:hover{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
+
+/* PAGE */
+.page-body{max-width:1300px;margin:0 auto;padding:28px 24px;}
+
+/* HERO */
+.hero-banner{background:linear-gradient(135deg,var(--primary) 0%,#1d4ed8 50%,var(--accent) 100%);border-radius:18px;padding:32px 40px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden;position:relative;animation:fadeDown .5s ease both;}
+.hero-banner::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.05);right:-80px;top:-80px;}
+.hero-banner::after{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);right:60px;bottom:-60px;}
+.hero-left{position:relative;z-index:1;}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:8px;}
+.hero-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:800;color:white;line-height:1.2;margin-bottom:8px;}
+.hero-desc{font-size:14px;color:rgba(255,255,255,.75);max-width:480px;line-height:1.6;}
+.hero-stats{display:flex;gap:24px;position:relative;z-index:1;flex-shrink:0;}
+.hero-stat{text-align:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 20px;backdrop-filter:blur(10px);}
+.hero-stat-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:white;line-height:1;margin-bottom:4px;}
+.hero-stat-label{font-size:10px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px;animation:fadeDown .5s .05s ease both;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm);}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.stat-info-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);line-height:1;}
+.stat-info-label{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ADMIN PANEL */
+.admin-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:28px;box-shadow:var(--shadow-sm);animation:fadeDown .5s .1s ease both;overflow:hidden;}
+.panel-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.panel-title{font-size:15px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;}
+.panel-body{padding:24px;}
+.user-table-wrap{overflow-x:auto;}
+.user-table{width:100%;border-collapse:collapse;font-size:13px;}
+.user-table th{text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:8px 12px;border-bottom:2px solid var(--border);}
+.user-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.user-table tr:last-child td{border-bottom:none;}
+.user-table tr:hover td{background:var(--surface2);}
+.td-user{display:flex;align-items:center;gap:9px;}
+.td-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--success),#10b981);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;}
+.td-name{font-weight:500;color:var(--text);}
+.td-uname{font-size:11px;color:var(--muted);}
+.access-count{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--primary);background:var(--primary-bg);padding:3px 10px;border-radius:12px;}
+.btn-sm{padding:6px 12px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
+.btn-primary-sm{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
+.btn-primary-sm:hover{background:var(--primary);color:white;}
+.btn-danger-sm{background:var(--danger-bg);color:var(--danger);border-color:#fecaca;}
+.btn-danger-sm:hover{background:var(--danger);color:white;}
+.btn-success-sm{background:var(--success-bg);color:var(--success);border-color:#a7f3d0;}
+.btn-success-sm:hover{background:var(--success);color:white;}
+.btn-add-user{display:flex;align-items:center;gap:7px;background:var(--primary);color:white;border:none;border-radius:var(--radius-sm);padding:9px 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(30,64,175,.2);}
+.btn-add-user:hover{background:#1d4ed8;transform:translateY(-1px);}
+.user-limit-badge{font-size:12px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:4px 12px;}
+.user-limit-badge strong{color:var(--warning);}
+
+/* EXPLORER */
+.explorer-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;animation:fadeDown .5s .15s ease both;flex-wrap:wrap;}
+.section-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);}
+.section-subtitle{font-size:12px;color:var(--muted);margin-top:2px;}
+.explorer-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.filter-tabs{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;gap:2px;flex-wrap:wrap;}
+.filter-tab{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--muted);padding:5px 10px;border-radius:5px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.filter-tab.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow-sm);}
+.view-toggle-btns{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+.vt-btn{background:none;border:none;padding:7px 10px;font-size:14px;color:var(--muted);cursor:pointer;transition:all .2s;}
+.vt-btn.active{background:var(--primary);color:white;}
+
+/* FILE GRID */
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;}
+.file-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px 16px 14px;cursor:pointer;transition:all .2s;position:relative;box-shadow:var(--shadow-sm);}
+.file-card:hover{border-color:var(--primary-light);box-shadow:0 6px 20px rgba(30,64,175,.1);transform:translateY(-2px);}
+.file-card-icon{font-size:34px;margin-bottom:10px;display:block;line-height:1;}
+.file-card-name{font-size:12.5px;font-weight:600;color:var(--text);word-break:break-word;line-height:1.4;margin-bottom:5px;}
+.file-card-meta{font-size:10.5px;color:var(--muted);line-height:1.5;}
+.file-type-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em;}
+.card-actions{display:flex;gap:6px;margin-top:10px;}
+.card-btn{flex:1;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px;}
+.card-btn-view{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
+.card-btn-view:hover{background:var(--primary);color:white;}
+.card-btn-dl{background:var(--success-bg);color:var(--success);border-color:#a7f3d0;}
+.card-btn-dl:hover{background:var(--success);color:white;}
+
+/* FILE LIST */
+.list-header-row{display:grid;grid-template-columns:36px 1fr 90px 110px 80px 90px;gap:12px;padding:8px 16px;font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border);margin-bottom:4px;}
+.list-row{display:grid;grid-template-columns:36px 1fr 90px 110px 80px 90px;gap:12px;align-items:center;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:4px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow-sm);font-size:13px;}
+.list-row:hover{border-color:var(--primary-light);background:var(--primary-bg);}
+.list-icon{font-size:20px;text-align:center;}
+.list-name-col{font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.list-date{color:var(--muted);font-size:11.5px;}
+.list-size{color:var(--muted);font-size:11.5px;text-align:right;}
+.list-actions{display:flex;gap:5px;justify-content:flex-end;}
+
+/* TYPE BADGE COLORS */
+.tb-dir{background:#fef3c7;color:#92400e;}
+.tb-txt{background:#dbeafe;color:#1e40af;}
+.tb-sh{background:#d1fae5;color:#065f46;}
+.tb-html{background:#fee2e2;color:#991b1b;}
+.tb-xlsx{background:#dcfce7;color:#14532d;}
+.tb-docx{background:#ede9fe;color:#4c1d95;}
+.tb-zip{background:#ffedd5;color:#7c2d12;}
+.tb-png{background:#fae8ff;color:#701a75;}
+.tb-log{background:#f1f5f9;color:#475569;}
+.tb-md{background:#cffafe;color:#164e63;}
+.tb-other{background:#f1f5f9;color:#475569;}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:.5;}
+.empty-text{font-size:14px;}
+
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease;}
+.modal-box{background:var(--surface);border-radius:16px;box-shadow:var(--shadow-lg);width:100%;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;animation:scaleUp .2s ease both;}
+.modal-box-sm{max-width:460px;}
+.modal-box-md{max-width:620px;}
+.modal-box-lg{max-width:760px;}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-head-title{font-size:16px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
+.modal-close-btn{background:var(--bg);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);transition:all .2s;}
+.modal-close-btn:hover{background:var(--danger-bg);color:var(--danger);border-color:#fecaca;}
+.modal-content{padding:24px;overflow-y:auto;flex:1;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
+.btn-modal-cancel{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:9px 18px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;}
+.btn-modal-ok{background:var(--primary);color:white;border:none;border-radius:var(--radius-sm);padding:9px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(30,64,175,.25);}
+.btn-modal-ok:hover{background:#1d4ed8;transform:translateY(-1px);}
+.access-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.checkbox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px;}
+.checkbox-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;font-size:12.5px;}
+.checkbox-item:hover{border-color:var(--primary-light);background:var(--primary-bg);}
+.checkbox-item input{accent-color:var(--primary);width:14px;height:14px;cursor:pointer;}
+.checkbox-item.checked{border-color:#bfdbfe;background:var(--primary-bg);}
+.cb-icon{font-size:15px;}
+.cb-name{font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.detail-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.detail-info-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;}
+.detail-info-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px;}
+.detail-info-val{font-size:13px;font-weight:600;color:var(--text);}
+.dl-btn-big{width:100%;background:linear-gradient(135deg,var(--success),#10b981);color:white;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 10px rgba(5,150,105,.25);}
+.dl-btn-big:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(5,150,105,.35);}
+.s3-note{background:var(--warning-bg);border:1px solid #fde68a;border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:#78350f;margin-top:12px;line-height:1.6;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:white;padding:12px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);z-index:999;display:flex;align-items:center;gap:8px;animation:slideRight .3s ease both;max-width:320px;}
+.toast.success{background:var(--success);}
+.toast.error{background:var(--danger);}
+
+/* ANIMATIONS */
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleUp{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+@media(max-width:768px){
+  .hero-stats{display:none;}
+  .hero-title{font-size:22px;}
+  .hero-banner{padding:24px;}
+  .file-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+  .list-header-row,.list-row{grid-template-columns:28px 1fr 80px 70px;}
+  .list-row>*:nth-child(4),.list-header-row>*:nth-child(4),
+  .list-row>*:nth-child(5),.list-header-row>*:nth-child(5),
+  .list-row>*:nth-child(6),.list-header-row>*:nth-child(6){display:none;}
+  .form-row{grid-template-columns:1fr;}
+  .detail-info-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-logo">☁️</div>
+      <div class="login-title">DevOps & Cloud<br>Resource Center</div>
+      <div class="login-subtitle">IT Training File Portal · Secure Access</div>
+    </div>
+    <div class="login-body">
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchLoginTab('admin')">🔐 Admin Login</button>
+        <button class="tab-btn" onclick="switchLoginTab('user')">👤 User Login</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input class="form-input" id="loginUser" type="text" placeholder="Enter username" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="loginPass" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn-login" onclick="doLogin()">Sign In →</button>
+      <div class="login-error" id="loginError">❌ Invalid username or password</div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appScreen">
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <div class="nav-brand">
+        <div class="brand-icon">☁️</div>
+        <div>
+          <div class="brand-text">DevOps & Cloud</div>
+          <div class="brand-sub">Resource Center · E:\ Class Drive</div>
+        </div>
+      </div>
+      <div class="nav-search">
+        <span class="nav-search-icon">🔍</span>
+        <input type="text" id="searchBox" placeholder="Search files and folders…" oninput="renderExplorer()">
+      </div>
+      <div class="nav-right">
+        <div class="user-pill">
+          <div class="user-avatar" id="navAvatar"></div>
+          <span class="user-name" id="navName"></span>
+          <span class="user-role" id="navRole"></span>
+        </div>
+        <button class="btn-icon" onclick="doLogout()" title="Logout">🚪</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-body">
+    <div class="hero-banner">
+      <div class="hero-left">
+        <div class="hero-eyebrow">E:\ Class Drive — Secure Portal</div>
+        <div class="hero-title" id="heroBannerTitle">DevOps & Cloud<br>Resource Center</div>
+        <div class="hero-desc" id="heroBannerDesc">Access your training materials, guides, scripts, and class resources — all in one place.</div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num" id="heroStatFiles">43</div><div class="hero-stat-label">Total Items</div></div>
+        <div class="hero-stat"><div class="hero-stat-num" id="heroStatFolders">13</div><div class="hero-stat-label">Folders</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">108 GB</div><div class="hero-stat-label">Free Space</div></div>
+      </div>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel" style="display:none">
+      <div class="panel-header">
+        <div class="panel-title">⚙️ Admin — User Management</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span class="user-limit-badge" id="limitBadge"></span>
+          <button class="btn-add-user" onclick="openAddUser()">＋ Add User</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="user-table-wrap">
+          <table class="user-table" id="userTable"></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Explorer -->
+    <div class="explorer-header">
+      <div>
+        <div class="section-title" id="explorerTitle">📂 All Files & Folders</div>
+        <div class="section-subtitle" id="explorerSub"></div>
+      </div>
+      <div class="explorer-controls">
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
+          <button class="filter-tab" onclick="setFilter('dir',this)">📁 Folders</button>
+          <button class="filter-tab" onclick="setFilter('txt',this)">📄 Text</button>
+          <button class="filter-tab" onclick="setFilter('script',this)">⚙️ Scripts</button>
+          <button class="filter-tab" onclick="setFilter('web',this)">🌐 Web</button>
+          <button class="filter-tab" onclick="setFilter('office',this)">📊 Office</button>
+        </div>
+        <div class="view-toggle-btns">
+          <button class="vt-btn active" id="vtnGrid" onclick="setView('grid')" title="Grid">⊞</button>
+          <button class="vt-btn" id="vtnList" onclick="setView('list')" title="List">☰</button>
+        </div>
+      </div>
+    </div>
+    <div id="explorerContainer"></div>
+  </div>
+</div>
+
+<!-- File Detail Modal -->
+<div id="fileModal" style="display:none">
+  <div class="modal-overlay" onclick="closeModal('fileModal',event)">
+    <div class="modal-box modal-box-md">
+      <div class="modal-head">
+        <div class="modal-head-title" id="fileModalTitle"></div>
+        <button class="modal-close-btn" onclick="closeModal('fileModal')">✕</button>
+      </div>
+      <div class="modal-content" id="fileModalContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add User Modal -->
+<div id="addUserModal" style="display:none">
+  <div class="modal-overlay" onclick="closeModal('addUserModal',event)">
+    <div class="modal-box modal-box-sm">
+      <div class="modal-head">
+        <div class="modal-head-title">👤 Add New User</div>
+        <button class="modal-close-btn" onclick="closeModal('addUserModal')">✕</button>
+      </div>
+      <div class="modal-content">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input class="form-input" id="newFullName" placeholder="e.g. Ravi Kumar">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input class="form-input" id="newUsername" placeholder="e.g. ravi">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" id="newPassword" type="password" placeholder="Set password">
+        </div>
+        <div id="addUserError" style="color:var(--danger);font-size:12px;margin-top:4px;display:none"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" onclick="closeModal('addUserModal')">Cancel</button>
+        <button class="btn-modal-ok" onclick="saveNewUser()">Create User</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Access Control Modal -->
+<div id="accessModal" style="display:none">
+  <div class="modal-overlay" onclick="closeModal('accessModal',event)">
+    <div class="modal-box modal-box-lg">
+      <div class="modal-head">
+        <div class="modal-head-title" id="accessModalTitle">🔑 Manage Access</div>
+        <button class="modal-close-btn" onclick="closeModal('accessModal')">✕</button>
+      </div>
+      <div class="modal-content" id="accessModalContent"></div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" onclick="closeModal('accessModal')">Cancel</button>
+        <button class="btn-modal-ok" onclick="saveAccess()">💾 Save Access</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONFIGURATION
+// ══════════════════════════════════════════════════════
+
+// ⬇️ CHANGE THIS NUMBER to set max users (e.g. 100, 500, 1000)
+const USER_LIMIT = 10;
+
+// ⬇️ CHANGE THIS to your S3 bucket base URL for downloads
+// Example: 'https://my-bucket.s3.ap-south-1.amazonaws.com/class-drive/'
+const S3_BASE_URL = './';
+
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+const ADMIN_CRED = { username:'admin', password:'admin123', name:'Administrator', role:'admin' };
+
+let USERS = [
+  { id:'u1', username:'john',  password:'john123', name:'John David',  access:['AWS Class','Docker','AWS-CLI install in ubundu.txt','docker install in ubundu.txt','Kubernetes install in ubundu.txt','Jankins'] },
+  { id:'u2', username:'sara',  password:'sara123', name:'Sara Priya',  access:['interview questions','Prometheus + Grafana + Alertmanager.docx','Playwright on AWS.txt','Class links.txt','index.html','Certificate'] },
+];
+
+const ALL_ITEMS = [
+  {name:"A+ N+",type:"dir",date:"20-12-2025",size:null,desc:"CompTIA A+ and Network+ study materials, notes, and resources."},
+  {name:"AWS Class",type:"dir",date:"28-02-2026",size:null,desc:"AWS training class materials, slides, and lab files."},
+  {name:"AWS DevOps",type:"dir",date:"08-03-2026",size:null,desc:"AWS DevOps course content, pipelines, and CI/CD resources."},
+  {name:"Azure",type:"dir",date:"04-12-2025",size:null,desc:"Microsoft Azure class materials and notes."},
+  {name:"Blaze",type:"dir",date:"15-01-2026",size:null,desc:"Blaze project or course folder."},
+  {name:"Certificate",type:"dir",date:"21-02-2024",size:null,desc:"Certificates and credential documents."},
+  {name:"Cisco",type:"dir",date:"08-03-2026",size:null,desc:"Cisco networking class resources and labs."},
+  {name:"Docker",type:"dir",date:"19-08-2025",size:null,desc:"Docker training materials, compose files, and configurations."},
+  {name:"interview questions",type:"dir",date:"20-12-2024",size:null,desc:"Interview preparation questions and answers."},
+  {name:"Jankins",type:"dir",date:"30-11-2025",size:null,desc:"Jenkins CI/CD pipeline files and configurations."},
+  {name:"Movie",type:"dir",date:"19-10-2025",size:null,desc:"Movie collection folder."},
+  {name:"sharepoint",type:"dir",date:"07-12-2025",size:null,desc:"SharePoint related files and resources."},
+  {name:"SteamLibrary",type:"dir",date:"10-08-2025",size:null,desc:"Steam game library files."},
+  {name:"111.txt",type:"txt",date:"15-03-2024",size:2901,desc:"General text notes file."},
+  {name:"Aws linux mount volume.txt",type:"txt",date:"08-02-2026",size:729,desc:"Steps for mounting volumes on AWS Linux instances."},
+  {name:"Aws webserver auto instll script.html",type:"html",date:"28-06-2024",size:233,desc:"HTML page for AWS web server auto-install script."},
+  {name:"Aws webserver auto instll script.txt",type:"txt",date:"27-06-2024",size:1881,desc:"Script notes for auto-installing a web server on AWS."},
+  {name:"AWS-CLI install in ubundu.txt",type:"txt",date:"23-09-2025",size:3174,desc:"Step-by-step AWS CLI installation guide for Ubuntu."},
+  {name:"Book1.xlsx",type:"xlsx",date:"04-05-2024",size:11680,desc:"Excel spreadsheet workbook."},
+  {name:"boy ids.txt",type:"txt",date:"29-02-2024",size:1264,desc:"List of student or user IDs."},
+  {name:"Capture.PNG",type:"png",date:"12-05-2025",size:436234,desc:"Screenshot or capture image (426 KB)."},
+  {name:"Class links.txt",type:"txt",date:"02-03-2026",size:1218,desc:"Collection of useful class and resource links."},
+  {name:"DevOps.txt",type:"txt",date:"08-03-2024",size:120,desc:"Short DevOps notes or reference."},
+  {name:"docker install in ubundu.txt",type:"txt",date:"13-02-2024",size:12518,desc:"Detailed Docker installation guide for Ubuntu (12 KB)."},
+  {name:"Elysium Coimbatore.xlsx",type:"xlsx",date:"12-05-2025",size:11789,desc:"Elysium Coimbatore data spreadsheet."},
+  {name:"ERPNext.txt",type:"txt",date:"01-03-2026",size:11758,desc:"ERPNext setup and configuration notes."},
+  {name:"How to Install Kubernetes on Ubuntu.txt",type:"txt",date:"15-10-2023",size:560,desc:"Quick guide for installing Kubernetes on Ubuntu."},
+  {name:"index.html",type:"html",date:"05-03-2026",size:13334,desc:"This file explorer portal — the main page."},
+  {name:"initrd-checks.sh",type:"sh",date:"28-03-2024",size:413,desc:"Shell script for initrd checks."},
+  {name:"Interive linux tips.txt",type:"txt",date:"28-03-2024",size:777,desc:"Interactive Linux command tips and tricks."},
+  {name:"Kubernetes install in ubundu.txt",type:"txt",date:"14-01-2024",size:1166,desc:"Kubernetes installation steps for Ubuntu."},
+  {name:"lamp aws.txt",type:"txt",date:"16-07-2024",size:259,desc:"LAMP stack setup on AWS notes."},
+  {name:"mongod.log",type:"log",date:"04-07-2024",size:170545,desc:"MongoDB daemon log file (166 KB)."},
+  {name:"Playwright on AWS.txt",type:"txt",date:"18-01-2026",size:9259,desc:"Playwright test automation setup on AWS."},
+  {name:"Playwright on Rocky Linux 9.txt",type:"txt",date:"18-01-2026",size:5247,desc:"Playwright installation guide for Rocky Linux 9."},
+  {name:"pre-artifacts.sh",type:"sh",date:"28-03-2024",size:1194,desc:"Shell script for pre-artifact setup tasks."},
+  {name:"Prometheus + Grafana + Alertmanager.docx",type:"docx",date:"02-02-2026",size:30927,desc:"Full monitoring stack guide: Prometheus, Grafana, Alertmanager."},
+  {name:"README.md",type:"md",date:"05-03-2026",size:12,desc:"README file for this drive/project."},
+  {name:"Request Tracker 5 (RT) on Ubuntu.txt",type:"txt",date:"23-06-2024",size:1243,desc:"RT5 ticketing system installation on Ubuntu."},
+  {name:"Sarath Chandran S.zip",type:"zip",date:"21-02-2024",size:30769667,desc:"Large zip archive (~29 MB). Personal backup files."},
+  {name:"VM Ware.txt",type:"txt",date:"19-02-2024",size:3182,desc:"VMware setup and usage notes."},
+  {name:"Website domain name registration.txt",type:"txt",date:"18-01-2024",size:111,desc:"Notes on domain registration and web hosting."},
+  {name:"whm and cloudlinux installation.txt",type:"txt",date:"25-10-2025",size:505,desc:"WHM and CloudLinux installation procedure."},
+];
+
+const ICONS={dir:'📁',txt:'📄',sh:'⚙️',html:'🌐',xlsx:'📊',docx:'📝',zip:'🗜️',png:'🖼️',log:'📋',md:'📑',other:'📎'};
+const TB={dir:'tb-dir',txt:'tb-txt',sh:'tb-sh',html:'tb-html',xlsx:'tb-xlsx',docx:'tb-docx',zip:'tb-zip',png:'tb-png',log:'tb-log',md:'tb-md',other:'tb-other'};
+const gi=t=>ICONS[t]||ICONS.other;
+const gt=t=>TB[t]||TB.other;
+function fmtSize(n){if(!n)return'—';if(n>=1048576)return(n/1048576).toFixed(1)+' MB';if(n>=1024)return(n/1024).toFixed(1)+' KB';return n+' B';}
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let currentUser=null,currentView='grid',currentFilter='all',editingUserId=null,tempAccess=[];
+
+// ══════════════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════════════
+let loginMode='admin';
+function switchLoginTab(m){
+  loginMode=m;
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(m==='admin'?0:1)===i));
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginError').style.display='none';
+}
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value.trim();
+  const err=document.getElementById('loginError');
+  if(loginMode==='admin'){
+    if(u===ADMIN_CRED.username&&p===ADMIN_CRED.password){currentUser={username:'admin',name:'Administrator',role:'admin',access:'all'};launchApp();return;}
+  } else {
+    const usr=USERS.find(x=>x.username===u&&x.password===p);
+    if(usr){currentUser={username:usr.username,name:usr.name,role:'user',access:usr.access};launchApp();return;}
+  }
+  err.style.display='block';
+}
+function doLogout(){
+  currentUser=null;
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginError').style.display='none';
+}
+
+// ══════════════════════════════════════════════════════
+// LAUNCH
+// ══════════════════════════════════════════════════════
+function launchApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+  const av=document.getElementById('navAvatar');
+  av.textContent=currentUser.name[0].toUpperCase();
+  av.className='user-avatar '+(currentUser.role==='admin'?'avatar-admin':'avatar-user');
+  document.getElementById('navName').textContent=currentUser.name;
+  const roleEl=document.getElementById('navRole');
+  roleEl.textContent=currentUser.role==='admin'?'Admin':'User';
+  roleEl.className='user-role '+(currentUser.role==='admin'?'role-admin':'role-user');
+
+  if(currentUser.role==='admin'){
+    document.getElementById('heroBannerTitle').innerHTML='DevOps & Cloud<br>Resource Center';
+    document.getElementById('heroBannerDesc').textContent='Full admin access — manage users, assign permissions, and browse all resources.';
+    document.getElementById('heroStatFiles').textContent=ALL_ITEMS.length;
+    document.getElementById('heroStatFolders').textContent=ALL_ITEMS.filter(x=>x.type==='dir').length;
+    document.getElementById('explorerTitle').textContent='📂 All Files & Folders';
+    document.getElementById('explorerSub').textContent=ALL_ITEMS.length+' items on E:\\ Class Drive';
+    document.getElementById('adminPanel').style.display='block';
+    renderAdminPanel();
+  } else {
+    const acc=currentUser.access;
+    document.getElementById('heroBannerTitle').innerHTML='Welcome,<br>'+currentUser.name;
+    document.getElementById('heroBannerDesc').textContent='You have access to '+acc.length+' file'+(acc.length!==1?'s':'')+' and folders assigned by admin.';
+    document.getElementById('heroStatFiles').textContent=acc.length;
+    document.getElementById('heroStatFolders').textContent=acc.filter(n=>ALL_ITEMS.find(x=>x.name===n&&x.type==='dir')).length;
+    document.getElementById('explorerTitle').textContent='📂 My Accessible Files';
+    document.getElementById('explorerSub').textContent=acc.length+' items assigned to you';
+    document.getElementById('adminPanel').style.display='none';
+  }
+  renderStats();renderExplorer();
+}
+
+// ══════════════════════════════════════════════════════
+// STATS ROW
+// ══════════════════════════════════════════════════════
+function renderStats(){
+  const items=getVisibleItems();
+  const types=[
+    {icon:'📁',label:'Folders',color:'#fef3c7',count:items.filter(x=>x.type==='dir').length},
+    {icon:'📄',label:'Text Files',color:'#dbeafe',count:items.filter(x=>x.type==='txt').length},
+    {icon:'⚙️',label:'Scripts',color:'#d1fae5',count:items.filter(x=>x.type==='sh').length},
+    {icon:'📊',label:'Spreadsheets',color:'#dcfce7',count:items.filter(x=>x.type==='xlsx').length},
+    {icon:'📝',label:'Documents',color:'#ede9fe',count:items.filter(x=>x.type==='docx').length},
+    {icon:'🌐',label:'Web & Docs',color:'#fee2e2',count:items.filter(x=>['html','md'].includes(x.type)).length},
+  ];
+  document.getElementById('statsRow').innerHTML=types.map(t=>`<div class="stat-card"><div class="stat-icon" style="background:${t.color}">${t.icon}</div><div><div class="stat-info-num">${t.count}</div><div class="stat-info-label">${t.label}</div></div></div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// ADMIN PANEL
+// ══════════════════════════════════════════════════════
+function renderAdminPanel(){
+  document.getElementById('limitBadge').innerHTML='Users: <strong>'+USERS.length+' / '+USER_LIMIT+'</strong>';
+  const rows=USERS.map(u=>`<tr>
+    <td><div class="td-user"><div class="td-avatar">${u.name[0]}</div><div><div class="td-name">${u.name}</div><div class="td-uname">@${u.username}</div></div></div></td>
+    <td><span class="access-count">🗂️ ${u.access.length} items</span></td>
+    <td>${u.access.slice(0,2).map(a=>`<span style="font-size:11px;background:#f0f9ff;border:1px solid #bae6fd;color:#0c4a6e;padding:2px 7px;border-radius:10px;margin-right:4px;display:inline-block;margin-bottom:3px">${a.length>18?a.slice(0,18)+'…':a}</span>`).join('')}${u.access.length>2?`<span style="font-size:11px;color:var(--muted)">+${u.access.length-2} more</span>`:''}</td>
+    <td><div style="display:flex;gap:6px"><button class="btn-sm btn-primary-sm" onclick="openAccess('${u.id}')">🔑 Access</button><button class="btn-sm btn-danger-sm" onclick="deleteUser('${u.id}')">🗑️ Delete</button></div></td>
+  </tr>`).join('');
+  document.getElementById('userTable').innerHTML=`<thead><tr><th>User</th><th>Access</th><th>Assigned Items</th><th>Actions</th></tr></thead><tbody>${rows||'<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--muted)">No users yet. Click Add User.</td></tr>'}</tbody>`;
+}
+
+function openAddUser(){
+  if(USERS.length>=USER_LIMIT){showToast('User limit reached ('+USER_LIMIT+'). Change USER_LIMIT in code to add more.','error');return;}
+  document.getElementById('newFullName').value='';
+  document.getElementById('newUsername').value='';
+  document.getElementById('newPassword').value='';
+  document.getElementById('addUserError').style.display='none';
+  openModal('addUserModal');
+}
+
+function saveNewUser(){
+  const name=document.getElementById('newFullName').value.trim();
+  const uname=document.getElementById('newUsername').value.trim().toLowerCase();
+  const pass=document.getElementById('newPassword').value.trim();
+  const errEl=document.getElementById('addUserError');
+  if(!name||!uname||!pass){errEl.textContent='Please fill all fields.';errEl.style.display='block';return;}
+  if(USERS.find(x=>x.username===uname)||uname==='admin'){errEl.textContent='Username already exists.';errEl.style.display='block';return;}
+  USERS.push({id:'u'+Date.now(),username:uname,password:pass,name,access:[]});
+  closeModal('addUserModal');renderAdminPanel();showToast('✅ User "'+name+'" created!','success');
+}
+
+function deleteUser(id){
+  if(!confirm('Delete this user?'))return;
+  USERS=USERS.filter(x=>x.id!==id);
+  renderAdminPanel();showToast('User deleted.','');
+}
+
+// ══════════════════════════════════════════════════════
+// ACCESS CONTROL
+// ══════════════════════════════════════════════════════
+function openAccess(uid){
+  const user=USERS.find(x=>x.id===uid);
+  editingUserId=uid;tempAccess=[...user.access];
+  document.getElementById('accessModalTitle').textContent='🔑 Access for '+user.name+' (@'+user.username+')';
+  const folders=ALL_ITEMS.filter(x=>x.type==='dir');
+  const files=ALL_ITEMS.filter(x=>x.type!=='dir');
+  function mkCb(item){
+    const chk=tempAccess.includes(item.name)?'checked':'';
+    const id='cb_'+item.name.replace(/\W/g,'_');
+    return`<label class="checkbox-item ${chk?'checked':''}" id="${id}"><input type="checkbox" ${chk} onchange="toggleAccess('${item.name.replace(/'/g,"\\'")}',this)" value="${item.name}"><span class="cb-icon">${gi(item.type)}</span><span class="cb-name" title="${item.name}">${item.name}</span></label>`;
+  }
+  document.getElementById('accessModalContent').innerHTML=`
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <button class="btn-sm btn-success-sm" onclick="selectAllAccess()">✅ Select All</button>
+      <button class="btn-sm btn-danger-sm" onclick="clearAllAccess()">❌ Clear All</button>
+      <span style="font-size:12px;color:var(--muted);align-self:center" id="accessCountLabel">${tempAccess.length} items selected</span>
+    </div>
+    <div class="access-section-title">📁 Folders (${folders.length})</div>
+    <div class="checkbox-grid">${folders.map(mkCb).join('')}</div>
+    <div class="access-section-title">📄 Files (${files.length})</div>
+    <div class="checkbox-grid">${files.map(mkCb).join('')}</div>`;
+  openModal('accessModal');
+}
+
+function toggleAccess(name,el){
+  const lbl=el.closest('.checkbox-item');
+  if(el.checked){if(!tempAccess.includes(name))tempAccess.push(name);lbl.classList.add('checked');}
+  else{tempAccess=tempAccess.filter(x=>x!==name);lbl.classList.remove('checked');}
+  document.getElementById('accessCountLabel').textContent=tempAccess.length+' items selected';
+}
+function selectAllAccess(){tempAccess=ALL_ITEMS.map(x=>x.name);document.querySelectorAll('#accessModalContent .checkbox-item input').forEach(cb=>{cb.checked=true;cb.closest('.checkbox-item').classList.add('checked');});document.getElementById('accessCountLabel').textContent=tempAccess.length+' items selected';}
+function clearAllAccess(){tempAccess=[];document.querySelectorAll('#accessModalContent .checkbox-item input').forEach(cb=>{cb.checked=false;cb.closest('.checkbox-item').classList.remove('checked');});document.getElementById('accessCountLabel').textContent='0 items selected';}
+function saveAccess(){const user=USERS.find(x=>x.id===editingUserId);user.access=[...tempAccess];closeModal('accessModal');renderAdminPanel();showToast('✅ Access updated for '+user.name+'!','success');}
+
+// ══════════════════════════════════════════════════════
+// EXPLORER
+// ══════════════════════════════════════════════════════
+function getVisibleItems(){return currentUser.role==='admin'?ALL_ITEMS:ALL_ITEMS.filter(x=>currentUser.access.includes(x.name));}
+function getFilteredItems(){
+  let items=getVisibleItems();
+  const q=document.getElementById('searchBox').value.trim().toLowerCase();
+  if(q)items=items.filter(x=>x.name.toLowerCase().includes(q)||x.desc.toLowerCase().includes(q));
+  if(currentFilter==='dir')items=items.filter(x=>x.type==='dir');
+  else if(currentFilter==='txt')items=items.filter(x=>x.type==='txt');
+  else if(currentFilter==='script')items=items.filter(x=>x.type==='sh');
+  else if(currentFilter==='web')items=items.filter(x=>['html','md'].includes(x.type));
+  else if(currentFilter==='office')items=items.filter(x=>['xlsx','docx'].includes(x.type));
+  return items;
+}
+function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.filter-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderExplorer();}
+function setView(v){currentView=v;document.getElementById('vtnGrid').classList.toggle('active',v==='grid');document.getElementById('vtnList').classList.toggle('active',v==='list');renderExplorer();}
+
+function renderExplorer(){
+  const items=getFilteredItems();
+  const c=document.getElementById('explorerContainer');
+  if(!items.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">No files match your search or filter.</div></div>';return;}
+  if(currentView==='grid'){
+    c.className='file-grid';
+    c.innerHTML=items.map((item,i)=>`
+      <div class="file-card" style="animation:fadeUp 0.4s ${Math.min(i*.02,.5)}s ease both" onclick="openFileDetail('${item.name.replace(/'/g,"\\'")}')">
+        <span class="file-type-badge ${gt(item.type)}">${item.type==='dir'?'DIR':item.type.toUpperCase()}</span>
+        <span class="file-card-icon">${gi(item.type)}</span>
+        <div class="file-card-name">${item.name}</div>
+        <div class="file-card-meta">${item.date}${item.size?'<br>'+fmtSize(item.size):''}</div>
+        <div class="card-actions">
+          <button class="card-btn card-btn-view" onclick="event.stopPropagation();openFileDetail('${item.name.replace(/'/g,"\\'")}')">👁 Info</button>
+          ${item.type!=='dir'?`<button class="card-btn card-btn-dl" onclick="event.stopPropagation();doDownload('${item.name.replace(/'/g,"\\'")}')">⬇ Save</button>`:''}
+        </div>
+      </div>`).join('');
+  } else {
+    c.className='file-list';
+    c.innerHTML=`<div class="list-header-row"><div></div><div>Name</div><div>Type</div><div>Date</div><div>Size</div><div>Actions</div></div>`+
+    items.map(item=>`
+      <div class="list-row" onclick="openFileDetail('${item.name.replace(/'/g,"\\'")}')">
+        <div class="list-icon">${gi(item.type)}</div>
+        <div class="list-name-col" title="${item.name}">${item.name}</div>
+        <div><span class="file-type-badge ${gt(item.type)}" style="position:static">${item.type==='dir'?'DIR':item.type.toUpperCase()}</span></div>
+        <div class="list-date">${item.date}</div>
+        <div class="list-size">${fmtSize(item.size)}</div>
+        <div class="list-actions">
+          <button class="btn-sm btn-primary-sm" onclick="event.stopPropagation();openFileDetail('${item.name.replace(/'/g,"\\'")}')">👁</button>
+          ${item.type!=='dir'?`<button class="btn-sm btn-success-sm" onclick="event.stopPropagation();doDownload('${item.name.replace(/'/g,"\\'")}')">⬇</button>`:''}
+        </div>
+      </div>`).join('');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// FILE DETAIL
+// ══════════════════════════════════════════════════════
+function openFileDetail(name){
+  const item=ALL_ITEMS.find(x=>x.name===name);
+  if(!item)return;
+  document.getElementById('fileModalTitle').innerHTML=gi(item.type)+' '+item.name;
+  document.getElementById('fileModalContent').innerHTML=`
+    <div class="detail-info-grid">
+      <div class="detail-info-item"><div class="detail-info-label">File Type</div><div class="detail-info-val"><span class="file-type-badge ${gt(item.type)}" style="position:static">${item.type==='dir'?'Folder':item.type.toUpperCase()}</span></div></div>
+      <div class="detail-info-item"><div class="detail-info-label">Last Modified</div><div class="detail-info-val">${item.date}</div></div>
+      <div class="detail-info-item"><div class="detail-info-label">Size</div><div class="detail-info-val">${fmtSize(item.size)}</div></div>
+      <div class="detail-info-item"><div class="detail-info-label">Location</div><div class="detail-info-val" style="font-size:11px;font-family:monospace">E:\\ ${item.name}</div></div>
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:13px;color:var(--text2);line-height:1.6">${item.desc}</div>
+    ${item.type!=='dir'?`
+    <button class="dl-btn-big" onclick="doDownload('${item.name.replace(/'/g,"\\'")}')">⬇️ Download / Save File</button>
+    <div class="s3-note">
+      💡 <strong>S3 Hosting Tip:</strong> Files must be uploaded to the same S3 bucket as this index.html. The download URL is: <code style="background:#fff3cd;padding:1px 5px;border-radius:3px">${S3_BASE_URL}${item.name}</code><br>
+      To change the S3 path, edit <strong>S3_BASE_URL</strong> at the top of the script section.
+    </div>`:`
+    <div class="s3-note" style="background:#f0fdf4;border-color:#bbf7d0">📁 This is a <strong>folder</strong>. On S3, folders are key prefixes — upload your files with the folder name as prefix (e.g. <code style="background:#fff;padding:1px 5px;border-radius:3px">${item.name}/file.txt</code>).</div>`}
+  `;
+  openModal('fileModal');
+}
+
+// ══════════════════════════════════════════════════════
+// DOWNLOAD
+// ══════════════════════════════════════════════════════
+function doDownload(name){
+  const item=ALL_ITEMS.find(x=>x.name===name);
+  if(!item||item.type==='dir'){showToast('Folders cannot be downloaded directly.','error');return;}
+  const link=document.createElement('a');
+  link.href=S3_BASE_URL+encodeURIComponent(name);
+  link.download=name;
+  link.target='_blank';
+  document.body.appendChild(link);link.click();document.body.removeChild(link);
+  showToast('⬇️ Downloading "'+name+'"…','success');
+}
+
+// ══════════════════════════════════════════════════════
+// MODALS & TOAST
+// ══════════════════════════════════════════════════════
+function openModal(id){document.getElementById(id).style.display='flex';}
+function closeModal(id,e){if(e&&e.target!==document.getElementById(id))return;document.getElementById(id).style.display='none';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')['fileModal','addUserModal','accessModal'].forEach(id=>{document.getElementById(id).style.display='none';});});
+
+let toastTimer;
+function showToast(msg,type=''){
+  clearTimeout(toastTimer);
+  const ex=document.getElementById('toastEl');if(ex)ex.remove();
+  const t=document.createElement('div');t.id='toastEl';
+  t.className='toast '+(type||'');t.textContent=msg;
+  document.body.appendChild(t);
+  toastTimer=setTimeout(()=>t.remove(),3000);
+}
+</script>
+</body>
+</html>

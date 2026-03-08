@@ -558,22 +558,42 @@ function doLogin(){
   const p=document.getElementById('lPass').value.trim();
   if(loginMode==='admin' && u===ADMIN.username && p===ADMIN.password){
     currentUser={username:'admin',name:'Administrator',role:'admin'};
+    sessionStorage.setItem('portalUser', JSON.stringify(currentUser));
     launchApp(); return;
   }
   if(loginMode==='user'){
     const usr=USERS.find(x=>x.username===u&&x.password===p);
-    if(usr){ currentUser={username:usr.username,name:usr.name,role:'user',id:usr.id}; launchApp(); return; }
+    if(usr){
+      currentUser={username:usr.username,name:usr.name,role:'user',id:usr.id};
+      sessionStorage.setItem('portalUser', JSON.stringify(currentUser));
+      launchApp(); return;
+    }
   }
   document.getElementById('loginErr').style.display='block';
 }
 function doLogout(){
   currentUser=null; allS3Items=[]; currentItems=[]; currentPath=S3_PREFIX; pathStack=[];
+  sessionStorage.removeItem('portalUser');
   document.getElementById('appScreen').style.display='none';
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('lUser').value='';
   document.getElementById('lPass').value='';
   document.getElementById('loginErr').style.display='none';
 }
+
+// ── Auto-restore session on page refresh ──
+(function restoreSession(){
+  try {
+    const saved = sessionStorage.getItem('portalUser');
+    if(saved){
+      currentUser = JSON.parse(saved);
+      // Wait for DOM then launch
+      window.addEventListener('DOMContentLoaded', ()=>{ launchApp(); });
+      // If DOM already ready
+      if(document.readyState !== 'loading') launchApp();
+    }
+  } catch(e){ sessionStorage.removeItem('portalUser'); }
+})();
 
 // ═══════════════════════════════════════════
 // LAUNCH APP
@@ -626,27 +646,31 @@ async function loadS3Files(){
   }
 }
 
+// Files and folders to always hide from the portal
+const HIDDEN_NAMES = ['index.html', 'index.htm', '.git', '.github', '.gitignore', '.DS_Store', 'Thumbs.db'];
+function isHidden(name){ return name.startsWith('.') || HIDDEN_NAMES.includes(name); }
+
 function parseS3XML(xml){
   const parser = new DOMParser();
   const doc    = parser.parseFromString(xml, 'application/xml');
   const items  = [];
   const seenDirs = new Set();
 
-  // Parse files (Contents)
   doc.querySelectorAll('Contents').forEach(c => {
     const key  = c.querySelector('Key')?.textContent || '';
     const size = parseInt(c.querySelector('Size')?.textContent || '0');
     const date = c.querySelector('LastModified')?.textContent || '';
-    // Strip the prefix to get relative path
     const rel  = key.replace(S3_PREFIX, '');
-    if(!rel || rel.endsWith('/')) return; // skip empty or folder markers
+    if(!rel || rel.endsWith('/')) return;
     const parts = rel.split('/');
     if(parts.length === 1){
-      // File in root of our prefix
+      // Root-level file — skip hidden ones
+      if(isHidden(parts[0])) return;
       items.push({ name:parts[0], type:'file', ext:getExt(parts[0]), fullKey:key, size, date, path:S3_PREFIX });
     } else {
-      // File is inside a subfolder — add the folder
+      // Inside a subfolder — skip hidden folders
       const folderName = parts[0];
+      if(isHidden(folderName)) return;
       const folderKey  = S3_PREFIX + folderName + '/';
       if(!seenDirs.has(folderKey)){
         seenDirs.add(folderKey);
@@ -655,17 +679,15 @@ function parseS3XML(xml){
     }
   });
 
-  // Also parse explicit CommonPrefixes if delimiter was used
   doc.querySelectorAll('CommonPrefixes Prefix').forEach(p => {
     const key  = p.textContent;
     const rel  = key.replace(S3_PREFIX,'').replace('/','');
-    if(rel && !seenDirs.has(key)){
+    if(rel && !isHidden(rel) && !seenDirs.has(key)){
       seenDirs.add(key);
       items.push({ name:rel, type:'dir', fullKey:key, size:0, date:'', path:S3_PREFIX });
     }
   });
 
-  // Sort: folders first, then files alphabetically
   items.sort((a,b)=>{
     if(a.type==='dir' && b.type!=='dir') return -1;
     if(a.type!=='dir' && b.type==='dir') return 1;

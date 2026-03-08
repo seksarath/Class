@@ -70,6 +70,32 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .role-user{background:var(--success-bg);color:var(--success);}
 .btn-icon{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .2s;color:var(--muted);}
 .btn-icon:hover{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
+.live-clock{text-align:right;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;min-width:110px;}
+.clock-time{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--primary);line-height:1.1;letter-spacing:.02em;}
+.clock-date{font-size:9.5px;color:var(--muted);letter-spacing:.03em;}
+
+/* BREADCRUMB NAV */
+.folder-breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;margin-bottom:16px;flex-wrap:wrap;}
+.bc-item{color:var(--primary);cursor:pointer;font-weight:500;padding:3px 8px;border-radius:5px;transition:background .15s;}
+.bc-item:hover{background:var(--primary-bg);}
+.bc-sep{color:var(--muted2);font-size:12px;}
+.bc-current{color:var(--text2);font-weight:600;padding:3px 8px;}
+
+/* CARD ACTIONS 3-btn */
+.card-actions-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:10px;}
+.card-btn-open{background:#fff7ed;color:#c2410c;border-color:#fed7aa;}
+.card-btn-open:hover{background:#ea580c;color:white;}
+
+/* FILE PREVIEW inside modal */
+.file-preview-box{background:#1e293b;border-radius:var(--radius-sm);padding:16px;overflow:auto;max-height:340px;margin-bottom:14px;}
+.file-preview-box pre{font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2e8f0;line-height:1.7;white-space:pre-wrap;word-break:break-word;}
+.preview-placeholder{text-align:center;padding:32px;color:var(--muted);}
+.preview-placeholder .prev-icon{font-size:42px;margin-bottom:10px;}
+.preview-placeholder p{font-size:13px;}
+
+/* FOLDER INSIDE VIEW */
+.folder-inside-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.folder-inside-empty{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
 
 /* PAGE */
 .page-body{max-width:1300px;margin:0 auto;padding:28px 24px;}
@@ -285,6 +311,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <input type="text" id="searchBox" placeholder="Search files and folders…" oninput="renderExplorer()">
       </div>
       <div class="nav-right">
+        <div class="live-clock"><div class="clock-time" id="clockTime">00:00:00</div><div class="clock-date" id="clockDate">--</div></div>
         <div class="user-pill">
           <div class="user-avatar" id="navAvatar"></div>
           <span class="user-name" id="navName"></span>
@@ -352,15 +379,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- File Detail Modal -->
+<!-- File Detail / Preview Modal -->
 <div id="fileModal" style="display:none">
   <div class="modal-overlay" onclick="closeModal('fileModal',event)">
-    <div class="modal-box modal-box-md">
+    <div class="modal-box modal-box-lg">
       <div class="modal-head">
         <div class="modal-head-title" id="fileModalTitle"></div>
         <button class="modal-close-btn" onclick="closeModal('fileModal')">✕</button>
       </div>
       <div class="modal-content" id="fileModalContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Folder Inside Modal -->
+<div id="folderModal" style="display:none">
+  <div class="modal-overlay" onclick="closeModal('folderModal',event)">
+    <div class="modal-box modal-box-lg">
+      <div class="modal-head">
+        <div class="modal-head-title" id="folderModalTitle"></div>
+        <button class="modal-close-btn" onclick="closeModal('folderModal')">✕</button>
+      </div>
+      <div class="modal-content" id="folderModalContent"></div>
     </div>
   </div>
 </div>
@@ -679,58 +719,236 @@ function renderExplorer(){
   if(!items.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">No files match your search or filter.</div></div>';return;}
   if(currentView==='grid'){
     c.className='file-grid';
-    c.innerHTML=items.map((item,i)=>`
-      <div class="file-card" style="animation:fadeUp 0.4s ${Math.min(i*.02,.5)}s ease both" onclick="openFileDetail('${item.name.replace(/'/g,"\\'")}')">
-        <span class="file-type-badge ${gt(item.type)}">${item.type==='dir'?'DIR':item.type.toUpperCase()}</span>
+    c.innerHTML=items.map((item,i)=>{
+      const n=item.name.replace(/'/g,"\\'");
+      const isDir=item.type==='dir';
+      return`<div class="file-card" style="animation:fadeUp 0.4s ${Math.min(i*.02,.5)}s ease both">
+        <span class="file-type-badge ${gt(item.type)}">${isDir?'DIR':item.type.toUpperCase()}</span>
         <span class="file-card-icon">${gi(item.type)}</span>
         <div class="file-card-name">${item.name}</div>
         <div class="file-card-meta">${item.date}${item.size?'<br>'+fmtSize(item.size):''}</div>
-        <div class="card-actions">
-          <button class="card-btn card-btn-view" onclick="event.stopPropagation();openFileDetail('${item.name.replace(/'/g,"\\'")}')">👁 Info</button>
-          ${item.type!=='dir'?`<button class="card-btn card-btn-dl" onclick="event.stopPropagation();doDownload('${item.name.replace(/'/g,"\\'")}')">⬇ Save</button>`:''}
+        <div class="card-actions-3">
+          <button class="card-btn card-btn-open" onclick="handleOpen('${n}')" title="${isDir?'Open Folder':'Open File'}">📂 Open</button>
+          ${isDir?
+            `<button class="card-btn card-btn-view" onclick="openFileDetail('${n}')" title="Info" style="grid-column:span 2">ℹ️ Info</button>`:
+            `<button class="card-btn card-btn-dl" onclick="doDownload('${n}')" title="Save/Download">⬇ Save</button>
+             <button class="card-btn card-btn-view" onclick="openFileDetail('${n}')" title="Info">ℹ️ Info</button>`}
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   } else {
     c.className='file-list';
     c.innerHTML=`<div class="list-header-row"><div></div><div>Name</div><div>Type</div><div>Date</div><div>Size</div><div>Actions</div></div>`+
-    items.map(item=>`
-      <div class="list-row" onclick="openFileDetail('${item.name.replace(/'/g,"\\'")}')">
+    items.map(item=>{
+      const n=item.name.replace(/'/g,"\\'");
+      const isDir=item.type==='dir';
+      return`<div class="list-row">
         <div class="list-icon">${gi(item.type)}</div>
         <div class="list-name-col" title="${item.name}">${item.name}</div>
-        <div><span class="file-type-badge ${gt(item.type)}" style="position:static">${item.type==='dir'?'DIR':item.type.toUpperCase()}</span></div>
+        <div><span class="file-type-badge ${gt(item.type)}" style="position:static">${isDir?'DIR':item.type.toUpperCase()}</span></div>
         <div class="list-date">${item.date}</div>
         <div class="list-size">${fmtSize(item.size)}</div>
         <div class="list-actions">
-          <button class="btn-sm btn-primary-sm" onclick="event.stopPropagation();openFileDetail('${item.name.replace(/'/g,"\\'")}')">👁</button>
-          ${item.type!=='dir'?`<button class="btn-sm btn-success-sm" onclick="event.stopPropagation();doDownload('${item.name.replace(/'/g,"\\'")}')">⬇</button>`:''}
+          <button class="btn-sm btn-primary-sm" onclick="handleOpen('${n}')" title="Open">📂</button>
+          ${!isDir?`<button class="btn-sm btn-success-sm" onclick="doDownload('${n}')" title="Save">⬇</button>`:''}
+          <button class="btn-sm" style="background:#fff7ed;color:#c2410c;border-color:#fed7aa" onclick="openFileDetail('${n}')" title="Info">ℹ️</button>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 }
 
 // ══════════════════════════════════════════════════════
-// FILE DETAIL
+// FOLDER & FILE CONTENTS DATA
+// Add files inside folders here — name must match folder name exactly
+// ══════════════════════════════════════════════════════
+const FOLDER_CONTENTS = {
+  'AWS Class':          [{name:'EC2-setup-guide.txt',type:'txt',size:2048,date:'10-01-2026',desc:'EC2 instance setup guide.'},{name:'S3-basics.txt',type:'txt',size:1500,date:'15-01-2026',desc:'S3 bucket creation and policy notes.'},{name:'IAM-roles.txt',type:'txt',size:980,date:'20-01-2026',desc:'IAM roles and permissions notes.'},{name:'VPC-setup.txt',type:'txt',size:1200,date:'22-01-2026',desc:'VPC and subnet configuration.'},{name:'CloudWatch.txt',type:'txt',size:870,date:'25-01-2026',desc:'CloudWatch monitoring setup.'}],
+  'AWS DevOps':         [{name:'CodePipeline.txt',type:'txt',size:3200,date:'01-03-2026',desc:'AWS CodePipeline CI/CD setup.'},{name:'CodeBuild-config.txt',type:'txt',size:1800,date:'02-03-2026',desc:'CodeBuild project configuration.'},{name:'CodeDeploy.txt',type:'txt',size:2100,date:'03-03-2026',desc:'CodeDeploy deployment groups.'},{name:'Terraform-basics.txt',type:'txt',size:4500,date:'05-03-2026',desc:'Terraform IaC intro notes.'}],
+  'Docker':             [{name:'docker-compose.yml',type:'sh',size:890,date:'10-08-2025',desc:'Sample docker-compose file.'},{name:'Dockerfile-nodejs.txt',type:'txt',size:450,date:'12-08-2025',desc:'Node.js Dockerfile template.'},{name:'Docker-commands.txt',type:'txt',size:2300,date:'15-08-2025',desc:'Essential Docker commands reference.'},{name:'Docker-networking.txt',type:'txt',size:1100,date:'18-08-2025',desc:'Docker networking modes explained.'}],
+  'Azure':              [{name:'Azure-VM-setup.txt',type:'txt',size:1900,date:'01-12-2025',desc:'Azure Virtual Machine creation steps.'},{name:'Azure-Storage.txt',type:'txt',size:1300,date:'03-12-2025',desc:'Azure Blob Storage guide.'},{name:'AzureAD-setup.txt',type:'txt',size:2200,date:'04-12-2025',desc:'Azure Active Directory configuration.'}],
+  'Cisco':              [{name:'CCNA-notes.txt',type:'txt',size:5600,date:'01-03-2026',desc:'CCNA exam preparation notes.'},{name:'Routing-protocols.txt',type:'txt',size:3400,date:'03-03-2026',desc:'OSPF, EIGRP, BGP overview.'},{name:'Switch-config.txt',type:'txt',size:2100,date:'05-03-2026',desc:'Cisco switch configuration commands.'},{name:'Network-topology.txt',type:'txt',size:1800,date:'07-03-2026',desc:'Network topology design notes.'}],
+  'Jankins':            [{name:'Jenkinsfile',type:'sh',size:1200,date:'20-11-2025',desc:'Sample Jenkinsfile pipeline.'},{name:'Jenkins-install.txt',type:'txt',size:2800,date:'22-11-2025',desc:'Jenkins installation on Ubuntu.'},{name:'Pipeline-stages.txt',type:'txt',size:1500,date:'25-11-2025',desc:'Jenkins pipeline stages explained.'},{name:'Jenkins-plugins.txt',type:'txt',size:900,date:'28-11-2025',desc:'Essential Jenkins plugins list.'}],
+  'interview questions': [{name:'Linux-Interview-Q.txt',type:'txt',size:8900,date:'10-12-2024',desc:'Linux interview questions and answers.'},{name:'AWS-Interview-Q.txt',type:'txt',size:7800,date:'12-12-2024',desc:'AWS interview Q&A.'},{name:'DevOps-Interview-Q.txt',type:'txt',size:9200,date:'15-12-2024',desc:'DevOps interview questions.'},{name:'Docker-K8s-Q.txt',type:'txt',size:6500,date:'18-12-2024',desc:'Docker and Kubernetes interview Q&A.'}],
+  'Certificate':        [{name:'AWS-Certificate.pdf',type:'docx',size:220000,date:'10-02-2024',desc:'AWS Cloud Practitioner certificate.'},{name:'Linux-Certificate.pdf',type:'docx',size:180000,date:'15-02-2024',desc:'Linux administration certificate.'}],
+  'Azure':              [{name:'Azure-VM-setup.txt',type:'txt',size:1900,date:'01-12-2025',desc:'Azure VM creation steps.'},{name:'Azure-CLI-guide.txt',type:'txt',size:2100,date:'03-12-2025',desc:'Azure CLI commands reference.'}],
+  'A+ N+':              [{name:'CompTIA-A-Notes.txt',type:'txt',size:12000,date:'01-12-2025',desc:'CompTIA A+ study notes.'},{name:'Network-Plus-Notes.txt',type:'txt',size:10500,date:'05-12-2025',desc:'Network+ certification notes.'},{name:'Practice-Questions.txt',type:'txt',size:8000,date:'10-12-2025',desc:'A+ and N+ practice questions.'}],
+  'Blaze':              [{name:'Blaze-intro.txt',type:'txt',size:1200,date:'10-01-2026',desc:'Blaze project introduction.'}],
+  'Movie':              [{name:'movie-list.txt',type:'txt',size:500,date:'15-10-2025',desc:'Movie collection list.'}],
+  'sharepoint':         [{name:'SharePoint-setup.txt',type:'txt',size:3200,date:'01-12-2025',desc:'SharePoint site setup guide.'},{name:'SP-permissions.txt',type:'txt',size:1800,date:'05-12-2025',desc:'SharePoint permissions management.'}],
+  'SteamLibrary':       [{name:'games-list.txt',type:'txt',size:600,date:'05-08-2025',desc:'Steam games list.'}],
+};
+
+// Sample preview content for text files (on S3 these will load from actual files)
+const FILE_PREVIEWS = {
+  'Class links.txt': `AWS Console: https://console.aws.amazon.com\nAWS Docs: https://docs.aws.amazon.com\nDocker Hub: https://hub.docker.com\nKubernetes Docs: https://kubernetes.io/docs\nJenkins: https://www.jenkins.io/doc\nPrometheus: https://prometheus.io/docs`,
+  'DevOps.txt': `DevOps = Development + Operations\n\nKey Principles:\n- Continuous Integration (CI)\n- Continuous Delivery (CD)\n- Infrastructure as Code (IaC)\n- Monitoring & Logging\n- Collaboration & Communication`,
+  'README.md': `# DevOps & Cloud Resource Center\n\nThis is the E:\\ Class Drive file portal.\n\nHosted on Amazon S3 as a static website.\n\n## Contents\n- AWS Class materials\n- DevOps guides\n- Linux tutorials\n- Scripts and configs`,
+  'lamp aws.txt': `LAMP Stack on AWS:\n1. Launch EC2 (Ubuntu 22.04)\n2. sudo apt update && sudo apt upgrade -y\n3. sudo apt install apache2 -y\n4. sudo apt install mysql-server -y\n5. sudo apt install php libapache2-mod-php -y\n6. sudo systemctl restart apache2`,
+};
+
+// ══════════════════════════════════════════════════════
+// HANDLE OPEN — routes folder vs file
+// ══════════════════════════════════════════════════════
+function handleOpen(name){
+  const item=ALL_ITEMS.find(x=>x.name===name);
+  if(!item)return;
+  if(item.type==='dir') openFolder(name);
+  else openFilePreview(name);
+}
+
+// ══════════════════════════════════════════════════════
+// OPEN FOLDER — shows files inside the folder
+// ══════════════════════════════════════════════════════
+function openFolder(folderName){
+  const folder=ALL_ITEMS.find(x=>x.name===folderName&&x.type==='dir');
+  if(!folder)return;
+  const contents=FOLDER_CONTENTS[folderName]||[];
+  document.getElementById('folderModalTitle').innerHTML=`📁 ${folderName}`;
+
+  let html=`
+    <div class="folder-breadcrumb">
+      <span class="bc-item" onclick="closeModal('folderModal')">🏠 Home</span>
+      <span class="bc-sep">›</span>
+      <span class="bc-current">📁 ${folderName}</span>
+    </div>
+    <div style="background:var(--primary-bg);border:1px solid #bfdbfe;border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px">
+      📂 <strong>${contents.length} file${contents.length!==1?'s':''}</strong> inside this folder &nbsp;·&nbsp; ${folder.date}
+    </div>`;
+
+  if(contents.length===0){
+    html+=`<div class="folder-inside-empty">📭 This folder is empty or not yet uploaded to S3.<br><small style="color:var(--muted2)">Upload files to S3 under: <code>${folderName}/</code></small></div>`;
+  } else {
+    html+=`<div class="folder-inside-grid">`;
+    contents.forEach(item=>{
+      const n=item.name.replace(/'/g,"\\'");
+      html+=`<div class="file-card" style="padding:14px 12px 10px">
+        <span class="file-type-badge ${gt(item.type)}" style="top:8px;right:8px">${item.type.toUpperCase()}</span>
+        <span class="file-card-icon" style="font-size:26px;margin-bottom:8px">${gi(item.type)}</span>
+        <div class="file-card-name" style="font-size:11.5px">${item.name}</div>
+        <div class="file-card-meta">${item.date} · ${fmtSize(item.size)}</div>
+        <div class="card-actions-3" style="margin-top:8px">
+          <button class="card-btn card-btn-open" onclick="openFolderFilePreview('${folderName}','${n}')">📄 Open</button>
+          <button class="card-btn card-btn-dl" onclick="doDownloadPath('${folderName}','${n}')">⬇ Save</button>
+          <button class="card-btn card-btn-view" onclick="openFolderFileInfo('${folderName}','${n}')">ℹ️ Info</button>
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+  document.getElementById('folderModalContent').innerHTML=html;
+  openModal('folderModal');
+}
+
+function openFolderFilePreview(folderName, fileName){
+  const contents=FOLDER_CONTENTS[folderName]||[];
+  const item=contents.find(x=>x.name===fileName);
+  if(!item)return;
+  // Build a temporary full path preview
+  const previewItem={...item, fullPath: folderName+'/'+fileName};
+  showFilePreviewModal(item, folderName+'/'+fileName);
+}
+
+function openFolderFileInfo(folderName, fileName){
+  const contents=FOLDER_CONTENTS[folderName]||[];
+  const item=contents.find(x=>x.name===fileName);
+  if(!item)return;
+  showFileInfoModal(item, folderName+'/'+fileName);
+}
+
+function doDownloadPath(folderName, fileName){
+  const link=document.createElement('a');
+  link.href=S3_BASE_URL+encodeURIComponent(folderName)+'/'+encodeURIComponent(fileName);
+  link.download=fileName;link.target='_blank';
+  document.body.appendChild(link);link.click();document.body.removeChild(link);
+  showToast('⬇️ Downloading "'+fileName+'"…','success');
+}
+
+// ══════════════════════════════════════════════════════
+// OPEN FILE PREVIEW
+// ══════════════════════════════════════════════════════
+function openFilePreview(name){
+  const item=ALL_ITEMS.find(x=>x.name===name);
+  if(!item)return;
+  showFilePreviewModal(item, name);
+}
+
+function showFilePreviewModal(item, fullPath){
+  document.getElementById('fileModalTitle').innerHTML=gi(item.type)+' '+item.name;
+  const previewContent=FILE_PREVIEWS[item.name];
+  const canPreview=['txt','sh','md','html','log'].includes(item.type);
+  let previewHtml='';
+  if(canPreview){
+    if(previewContent){
+      previewHtml=`<div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em">📄 File Preview</div>
+      <div class="file-preview-box"><pre>${previewContent.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></div>`;
+    } else {
+      previewHtml=`<div class="file-preview-box"><div class="preview-placeholder"><div class="prev-icon">${gi(item.type)}</div><p><strong>${item.name}</strong></p><p style="margin-top:8px;font-size:12px">Preview loads from S3 when hosted.<br>On S3, this will show the actual file contents.</p></div></div>`;
+    }
+  } else if(item.type==='png'){
+    previewHtml=`<div class="file-preview-box" style="background:#f8fafc"><div class="preview-placeholder"><div class="prev-icon">🖼️</div><p><strong>${item.name}</strong></p><p style="margin-top:8px;font-size:12px">Image preview — click Save to download.</p></div></div>`;
+  } else {
+    previewHtml=`<div class="file-preview-box"><div class="preview-placeholder"><div class="prev-icon">${gi(item.type)}</div><p><strong>${item.name}</strong></p><p style="margin-top:8px;font-size:12px">${item.type.toUpperCase()} files open in their native app when downloaded.</p></div></div>`;
+  }
+
+  document.getElementById('fileModalContent').innerHTML=`
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <span class="file-type-badge ${gt(item.type)}" style="position:static;font-size:10px;padding:3px 10px">${item.type.toUpperCase()}</span>
+      <span style="font-size:12px;color:var(--muted);align-self:center">📅 ${item.date}</span>
+      <span style="font-size:12px;color:var(--muted);align-self:center">📦 ${fmtSize(item.size)}</span>
+      <span style="font-size:12px;color:var(--muted);align-self:center;font-family:monospace">📍 E:\\ ${fullPath}</span>
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--text2)">${item.desc}</div>
+    ${previewHtml}
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="dl-btn-big" style="flex:1;min-width:140px" onclick="doDownload('${item.name.replace(/'/g,"\\'")}')">⬇️ Save / Download</button>
+      <button class="dl-btn-big" style="flex:1;min-width:140px;background:linear-gradient(135deg,var(--primary),#2563eb)" onclick="window.open(S3_BASE_URL+encodeURIComponent('${item.name.replace(/'/g,"\\'")}'),'_blank')">🔗 Open in Browser</button>
+    </div>`;
+  openModal('fileModal');
+}
+
+// ══════════════════════════════════════════════════════
+// FILE DETAIL (Info only — no preview)
 // ══════════════════════════════════════════════════════
 function openFileDetail(name){
   const item=ALL_ITEMS.find(x=>x.name===name);
   if(!item)return;
-  document.getElementById('fileModalTitle').innerHTML=gi(item.type)+' '+item.name;
+  if(item.type==='dir'){
+    showFolderInfoModal(item);
+  } else {
+    showFileInfoModal(item, name);
+  }
+}
+
+function showFolderInfoModal(item){
+  const contents=FOLDER_CONTENTS[item.name]||[];
+  document.getElementById('fileModalTitle').innerHTML='📁 '+item.name;
   document.getElementById('fileModalContent').innerHTML=`
     <div class="detail-info-grid">
-      <div class="detail-info-item"><div class="detail-info-label">File Type</div><div class="detail-info-val"><span class="file-type-badge ${gt(item.type)}" style="position:static">${item.type==='dir'?'Folder':item.type.toUpperCase()}</span></div></div>
+      <div class="detail-info-item"><div class="detail-info-label">Type</div><div class="detail-info-val"><span class="file-type-badge tb-dir" style="position:static">FOLDER</span></div></div>
+      <div class="detail-info-item"><div class="detail-info-label">Last Modified</div><div class="detail-info-val">${item.date}</div></div>
+      <div class="detail-info-item"><div class="detail-info-label">Files Inside</div><div class="detail-info-val">${contents.length} files</div></div>
+      <div class="detail-info-item"><div class="detail-info-label">S3 Prefix</div><div class="detail-info-val" style="font-size:11px;font-family:monospace">${item.name}/</div></div>
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--text2)">${item.desc}</div>
+    <button class="dl-btn-big" style="background:linear-gradient(135deg,var(--folder),#f59e0b)" onclick="closeModal('fileModal');openFolder('${item.name.replace(/'/g,"\\'")}')">📂 Open This Folder</button>`;
+  openModal('fileModal');
+}
+
+function showFileInfoModal(item, fullPath){
+  document.getElementById('fileModalTitle').innerHTML=gi(item.type)+' '+item.name+' — Info';
+  document.getElementById('fileModalContent').innerHTML=`
+    <div class="detail-info-grid">
+      <div class="detail-info-item"><div class="detail-info-label">File Type</div><div class="detail-info-val"><span class="file-type-badge ${gt(item.type)}" style="position:static">${item.type.toUpperCase()}</span></div></div>
       <div class="detail-info-item"><div class="detail-info-label">Last Modified</div><div class="detail-info-val">${item.date}</div></div>
       <div class="detail-info-item"><div class="detail-info-label">Size</div><div class="detail-info-val">${fmtSize(item.size)}</div></div>
-      <div class="detail-info-item"><div class="detail-info-label">Location</div><div class="detail-info-val" style="font-size:11px;font-family:monospace">E:\\ ${item.name}</div></div>
+      <div class="detail-info-item"><div class="detail-info-label">Location</div><div class="detail-info-val" style="font-size:11px;font-family:monospace">E:\\ ${fullPath||item.name}</div></div>
     </div>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:13px;color:var(--text2);line-height:1.6">${item.desc}</div>
-    ${item.type!=='dir'?`
-    <button class="dl-btn-big" onclick="doDownload('${item.name.replace(/'/g,"\\'")}')">⬇️ Download / Save File</button>
-    <div class="s3-note">
-      💡 <strong>S3 Hosting Tip:</strong> Files must be uploaded to the same S3 bucket as this index.html. The download URL is: <code style="background:#fff3cd;padding:1px 5px;border-radius:3px">${S3_BASE_URL}${item.name}</code><br>
-      To change the S3 path, edit <strong>S3_BASE_URL</strong> at the top of the script section.
-    </div>`:`
-    <div class="s3-note" style="background:#f0fdf4;border-color:#bbf7d0">📁 This is a <strong>folder</strong>. On S3, folders are key prefixes — upload your files with the folder name as prefix (e.g. <code style="background:#fff;padding:1px 5px;border-radius:3px">${item.name}/file.txt</code>).</div>`}
-  `;
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--text2)">${item.desc}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="dl-btn-big" style="flex:1;min-width:140px" onclick="doDownload('${item.name.replace(/'/g,"\\'")}')">⬇️ Save / Download</button>
+      <button class="dl-btn-big" style="flex:1;min-width:140px;background:linear-gradient(135deg,#ea580c,#f97316)" onclick="openFilePreview('${item.name.replace(/'/g,"\\'")}');closeModal('fileModal')">📄 Preview File</button>
+    </div>`;
   openModal('fileModal');
 }
 
@@ -742,18 +960,33 @@ function doDownload(name){
   if(!item||item.type==='dir'){showToast('Folders cannot be downloaded directly.','error');return;}
   const link=document.createElement('a');
   link.href=S3_BASE_URL+encodeURIComponent(name);
-  link.download=name;
-  link.target='_blank';
+  link.download=name;link.target='_blank';
   document.body.appendChild(link);link.click();document.body.removeChild(link);
   showToast('⬇️ Downloading "'+name+'"…','success');
 }
+
+// ══════════════════════════════════════════════════════
+// LIVE CLOCK
+// ══════════════════════════════════════════════════════
+function updateClock(){
+  const now=new Date();
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const hh=String(now.getHours()).padStart(2,'0');
+  const mm=String(now.getMinutes()).padStart(2,'0');
+  const ss=String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clockTime').textContent=`${hh}:${mm}:${ss}`;
+  document.getElementById('clockDate').textContent=`${days[now.getDay()]}, ${String(now.getDate()).padStart(2,'0')} ${months[now.getMonth()]} ${now.getFullYear()}`;
+}
+setInterval(updateClock,1000);
+updateClock();
 
 // ══════════════════════════════════════════════════════
 // MODALS & TOAST
 // ══════════════════════════════════════════════════════
 function openModal(id){document.getElementById(id).style.display='flex';}
 function closeModal(id,e){if(e&&e.target!==document.getElementById(id))return;document.getElementById(id).style.display='none';}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')['fileModal','addUserModal','accessModal'].forEach(id=>{document.getElementById(id).style.display='none';});});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')['fileModal','folderModal','addUserModal','accessModal'].forEach(id=>{document.getElementById(id).style.display='none';});});
 
 let toastTimer;
 function showToast(msg,type=''){

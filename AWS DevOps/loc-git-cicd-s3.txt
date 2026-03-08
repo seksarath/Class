@@ -1,0 +1,138 @@
+Your PC
+   ↓
+Git Push
+   ↓
+GitHub Repository
+   ↓
+GitHub Actions (CI/CD)
+   ↓
+AWS S3 Bucket
+
+
+In S3
+Step 1:--
+ — Create S3 Bucke
+Step 2:---
+ — Go to IAM → Users → Create user.-AmazonS3FullAccess
+
+Inside of user Create Access key:-
+Enable: Programmatic access
+Steps:--
+Select:-
+Application running outside AWS
+Access key  - 
+Secret access key  -- 
+
+
+Enable: Programmatic access
+
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+
+Step 3:---
+ — Add Secrets in GitHub
+Settings → Secrets → Actions
+Add
+AWS_ACCESS_KEY_ID = 
+AWS_SECRET_ACCESS_KEY = 
+AWS_REGION = us-east-1
+S3_BUCKET = allclassindex
+
+Step 4 — Create GitHub Action
+Inside your repo create folder:
+.github/workflows
+
+Create file:
+deploy.yml
+**********************************
+name: Upload to S3
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Upload files to S3
+      run: |
+        aws s3 sync . s3://${{ secrets.S3_BUCKET }}/class --delete
+
+**********************************
+Open Your GitHub Repository
+https://github.com/seksarath/Class
+Settings
+Secrets and variables
+Actions
+New repository secret
+
+AWS_ACCESS_KEY_ID = 
+AWS_SECRET_ACCESS_KEY = 
+AWS_REGION = us-east-1
+S3_BUCKET = 
+
+mkdir .github
+mkdir .github\workflows
+.github/workflows/deploy.yml
+
+cd E:\
+git add .github/workflows/deploy.yml
+git commit -m "Added GitHub Action workflow"
+git push origin master
+
+git add .
+git commit -m "S3 Auto deploy"
+git push origin master
+
+
+
+https://allclassindex.s3.us-east-1.amazonaws.com/class/index.html
+
+Add bucket policy its must to open this link access:---
+Open youe bucket:-
+Permissions:-
+Block public access : -- Untick all public acces
+Bucket policy :- Edit, paste and save 
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadAccess",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::allclassindex/*"
+    }
+  ]
+}
+
+or
+
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": "*",
+    "Action": ["s3:GetObject","s3:ListBucket"],
+    "Resource": [
+      "arn:aws:s3:::allclassindex",
+      "arn:aws:s3:::allclassindex/*"
+    ]
+  }]
+}
+
+
+https://allclassindex.s3.us-east-1.amazonaws.com/class/index.html

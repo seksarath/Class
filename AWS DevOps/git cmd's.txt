@@ -1,0 +1,57 @@
+Check its connect or not with git:-
+
+git remote -v
+git remote add origin https://github.com/seksarath/Class.git
+git remote -v
+
+Get branch name changed cmd:--
+git branch -M main
+
+1️⃣ Add a Single File:----
+git add filename.txt
+    Example::-
+git add index.html
+git commit -m "Updated index file"
+git push origin master
+
+2️⃣ Add a Specific Folder
+git add foldername/
+    Example::-
+git add src/
+This uploads all files inside src folder.
+
+3️⃣ Add a Subfolder
+git add folder/subfolder/
+    Example::-
+git add project/api/
+
+4️⃣ Add Specific File Inside Folder
+git add folder/file.txt
+    Example::-
+git add css/style.css
+
+5️⃣ Add Only Modified Files
+git add -u
+
+This adds only modified/deleted files, not new files.
+
+✅file with 2 directory add cmd
+
+git add .github/workflows/deploy.yml
+
+6️⃣ Check What Will Be Uploaded
+
+Before commit you can check:
+
+git status
+
+✅ Example Full Flow
+
+git add src/app.js
+git commit -m "Updated app.js"
+git push origin master
+
+💡 Pro Tip (Very Useful)
+If you want interactive selection of files:
+
+git add -p

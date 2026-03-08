@@ -1,0 +1,193 @@
+
+2Ec2 instance -1jankins -2webserver -git -local folder
+
+echo "# AWS-push" >> README.md
+git init git add README.md
+git commit -m "first commit" 
+git branch -M main
+git remote add origin https://github.com/seksarath/AWS-push.git git push -u origin main
+git add index.html
+git commit -m "Add index.html file"
+git push origin main
+***********************************************************
+Jenkin server:---
+http://18.226.186.148:8080/manage/pluginManager/installed
+admin
+Admin@123
+
+Check its installed.
+    Plugin Must::-
+        Git
+        Pipeline
+        SSH Agent
+        unique ID
+Go to Jenkins → Manage Jenkins → Credentials → Global → Add Credentials
+Type: Username with password
+Username: seksarath
+Password: Admin@123
+****************
+https://github.com/settings/personal-access-tokens/new for token gen use this link
+****************
+ID: github_pat_0000000711BOJYDAA0bO6k9dcGKwo0_qFRsmSkqoO0iF1KhfZyHdkkg2IwFzOxLdJZPupLuq0VIGX7AGOBD1W2MuFZ
+https://github.com/seksarath/AWS-push/settings/hooks
+Add webhook
+http://18.226.186.148:8080/github-webhook/
+application/json
+Secret: (leave blank)
+
+In Jenkins server run these:--
+sudo yum install git -y
+sudo systemctl restart Jenkins
+
+sudo usermod -s /bin/bash jenkins
+sudo su - Jenkins
+echo $HOME
+# Should now return /var/lib/jenkins
+ssh-keygen -t rsa -b 4096 -C "jenkins-aws"
+cat ~/.ssh/id_rsa.pub
+Copy this key:---
+Paste in ec2webserver user:--
+
+
+Run this cmd in Jenkins to webserver for testing connect or not :----
+ssh -i ~/.ssh/id_rsa ec2-user@18.188.45.164
+
+su - jenkins
+ssh ec2-user@18.188.45.164
+sudo chown -R ec2-user:ec2-user /var/www/html
+sudo chmod -R 755 /var/www/html
+***********************************************************
+EC2 server:---
+Must in ec2user not in root:-
+nano ~/.ssh/authorized_keys
+****Paste here***
+
+chmod 600 /home/ec2-user/.ssh/authorized_keys
+chmod 700 /home/ec2-user/.ssh
+
+
+
+Go to Jenkins → New Item → Pipeline
+Loc-Get-Jen-EC2Web
+
+Discard old builds
+(Set days to keep builds like 7 or 14)
+
+Do not allow concurrent builds
+
+GitHub hook trigger for GITScm polling
+
+Poll SCM:--
+* * * * *
+
+pipeline {
+    agent any
+
+    environment {
+        EC2_HOST = "18.188.45.164"
+        EC2_USER = "ec2-user"
+        DEPLOY_PATH = "/var/www/html"
+    }
+
+    stages {
+
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/seksarath/AWS-push.git'
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                sh '''
+                echo "Starting Deployment..."
+                scp -o StrictHostKeyChecking=no -r ${WORKSPACE}/* \
+                ${EC2_USER}@${EC2_HOST}:${DEPLOY_PATH}/
+                '''
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                echo "Verifying Deployment..."
+                ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} \
+                "ls -l ${DEPLOY_PATH}"
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Deployment Successful 🚀"
+        }
+        failure {
+            echo "Deployment Failed ❌"
+        }
+    }
+}
+
+In local PC:-
+index.html edit and check:--
+git add .
+git commit -m "Add index.html file"
+git push origin main
+
+
+Check its deploy
+1 - IN git - your repo - Code - time and name
+2- in git -you repo - setting - webhook Webhooks / Manage webhook - Settings - Recent Deliveries
+3-
+
+
+Jenkins → Manage Jenkins → Nodes
+
+
+Manage Jenkins → Script Console
+
+import jenkins.model.*
+Jenkins.instance.getNode("").getNodeProperties().add(
+    new hudson.slaves.EnvironmentVariablesNodeProperty(
+        new hudson.slaves.EnvironmentVariablesNodeProperty.Entry("TMPDIR", "/var/tmp")
+    )
+)
+
+Then Run
+
+sudo systemctl restart Jenkins
+
+HDD Add 20 GB
+sudo lsblk
+sudo mkfs.ext4 /dev/nvme1n1
+sudo mkdir /jenkins-data
+sudo mount /dev/nvme1n1 /jenkins-data
+df -hT
+sudo nano /etc/fstab
+/dev/nvme1n1  /jenkins-data  ext4  defaults,nofail  0  2
+sudo umount /jenkins-data
+sudo mount -a
+sudo mkdir /jenkins-data/tmp
+sudo chmod 777 /jenkins-data/tmp
+
+sudo nano /usr/lib/systemd/system/jenkins.service
+find this
+Environment="JAVA_OPTS=
+Environment="JAVA_OPTS=-Djava.io.tmpdir=/jenkins-data/tmp"
+
+sudo systemctl stop Jenkins
+sudo mv /var/lib/jenkins /jenkins-data/
+sudo ln -s /jenkins-data/jenkins /var/lib/Jenkins
+sudo chown -R jenkins:jenkins /jenkins-data/jenkins
+sudo systemctl start jenkins
+sudo systemctl daemon-reload
+sudo systemctl restart Jenkins
+sudo systemctl status Jenkins
+

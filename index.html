@@ -696,31 +696,50 @@ function parseS3XML(xml){
   return items;
 }
 
-// Get files inside a specific folder path from allS3Items
-function getFilesInFolder(folderPrefix){
-  // We need to re-fetch for subfolder, or derive from allS3Items
-  // Since we fetched all keys recursively, derive from allS3Items
-  const items = [];
+// Fetch files inside a specific folder LIVE from S3
+async function getFilesInFolder(folderPrefix){
+  try {
+    const url = `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/?list-type=2&prefix=${encodeURIComponent(folderPrefix)}&max-keys=1000`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const xml = await res.text();
+    return parseFolderXML(xml, folderPrefix);
+  } catch(e) {
+    showToast('Could not load folder contents: '+e.message, 'error');
+    return [];
+  }
+}
+
+// Parse XML specifically for a subfolder listing
+function parseFolderXML(xml, folderPrefix){
+  const parser = new DOMParser();
+  const doc    = parser.parseFromString(xml, 'application/xml');
+  const items  = [];
   const seenDirs = new Set();
-  // folderPrefix is like 'class/AWS Class/'
-  allS3Items.forEach(item => {
-    if(item.type === 'file'){
-      const rel = item.fullKey.replace(folderPrefix,'');
-      if(rel && !rel.startsWith('../') && item.fullKey.startsWith(folderPrefix)){
-        const parts = rel.split('/');
-        if(parts.length === 1){
-          items.push({...item, path: folderPrefix});
-        } else {
-          const sub = parts[0];
-          const subKey = folderPrefix + sub + '/';
-          if(!seenDirs.has(subKey)){
-            seenDirs.add(subKey);
-            items.push({ name:sub, type:'dir', fullKey:subKey, size:0, date:item.date, path:folderPrefix });
-          }
-        }
+
+  doc.querySelectorAll('Contents').forEach(c => {
+    const key  = c.querySelector('Key')?.textContent || '';
+    const size = parseInt(c.querySelector('Size')?.textContent || '0');
+    const date = c.querySelector('LastModified')?.textContent || '';
+    const rel  = key.replace(folderPrefix, '');
+    if(!rel || rel.endsWith('/')) return; // skip folder markers
+    const parts = rel.split('/');
+    if(parts.length === 1){
+      // Direct file inside this folder
+      if(isHidden(parts[0])) return;
+      items.push({ name:parts[0], type:'file', ext:getExt(parts[0]), fullKey:key, size, date, path:folderPrefix });
+    } else {
+      // Nested subfolder
+      const subName = parts[0];
+      if(isHidden(subName)) return;
+      const subKey = folderPrefix + subName + '/';
+      if(!seenDirs.has(subKey)){
+        seenDirs.add(subKey);
+        items.push({ name:subName, type:'dir', fullKey:subKey, size:0, date, path:folderPrefix });
       }
     }
   });
+
   items.sort((a,b)=>{
     if(a.type==='dir'&&b.type!=='dir') return -1;
     if(a.type!=='dir'&&b.type==='dir') return 1;
@@ -729,24 +748,24 @@ function getFilesInFolder(folderPrefix){
   return items;
 }
 
-function renderFromPath(){
+
+async function renderFromPath(){
   let items;
   if(currentPath === S3_PREFIX){
-    // Root level — show top-level items
     items = allS3Items;
   } else {
-    items = getFilesInFolder(currentPath);
+    // Show loading state while fetching folder contents
+    showSkeleton();
+    setS3Status('loading', 'Loading folder contents…');
+    items = await getFilesInFolder(currentPath);
+    setS3Status('success', '✅ '+items.length+' item'+(items.length!==1?'s':'')+' in this folder');
   }
 
   // For users: filter by access list
   if(currentUser.role === 'user'){
     const usr = USERS.find(x=>x.id===currentUser.id);
     const acc = usr ? usr.access : [];
-    if(acc.length > 0){
-      items = items.filter(x => acc.includes(x.name) || acc.includes(x.fullKey));
-    } else {
-      items = [];
-    }
+    items = acc.length > 0 ? items.filter(x => acc.includes(x.name) || acc.includes(x.fullKey)) : [];
   }
 
   currentItems = items;
@@ -759,36 +778,22 @@ function renderFromPath(){
 // ═══════════════════════════════════════════
 // NAVIGATE INTO FOLDER
 // ═══════════════════════════════════════════
-function openFolder(item){
+async function openFolder(item){
   pathStack.push({ label: item.name, prefix: currentPath });
   currentPath = item.fullKey;
   currentFilter = 'all';
   document.querySelectorAll('.ftab').forEach((b,i)=>b.classList.toggle('active',i===0));
-  renderFromPath();
+  await renderFromPath();
 }
 
 function navToIndex(idx){
-  // Navigate back to a specific breadcrumb index
-  if(idx < 0){
-    // Home
-    currentPath = S3_PREFIX;
-    pathStack = [];
-  } else {
-    currentPath = pathStack[idx].prefix;
-    // Navigate into that prefix's folder name
-    if(idx < pathStack.length - 1){
-      const dest = pathStack[idx+1];
-      currentPath = dest.prefix + (pathStack[idx+1]?.label ? pathStack[idx+1].label+'/' : '');
-    }
-    // Actually just go home and re-enter
-    const stack = pathStack.slice(0, idx+1);
-    currentPath = stack.length > 0 ? stack[stack.length-1].prefix : S3_PREFIX;
-    // Re-navigate forward through the stack
-    for(let i=idx+1; i<pathStack.length; i++){
-      // skip — we're truncating
-    }
-    pathStack = stack;
-  }
+  const stack = pathStack.slice(0, idx+1);
+  currentPath = stack.length > 0
+    ? stack[stack.length-1].prefix + stack[stack.length-1].label + '/'
+    : S3_PREFIX;
+  // Special case: idx=0 means go into the first folder
+  if(stack.length === 0) currentPath = S3_PREFIX;
+  pathStack = stack;
   currentFilter = 'all';
   document.querySelectorAll('.ftab').forEach((b,i)=>b.classList.toggle('active',i===0));
   renderFromPath();
@@ -942,7 +947,8 @@ function handleInfo(i){
 async function openFilePreview(item){
   const ext=getExt(item.name);
   document.getElementById('fmTitle').innerHTML=getIcon(item)+' '+item.name;
-  const fileUrl=S3_BASE_URL+encodeURIComponent(item.name);
+  // Use fullKey so files inside subfolders resolve correctly
+  const fileUrl=`https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${item.fullKey}`;
 
   let previewHtml='';
   if(PREVIEWABLE.includes(ext)){
@@ -1019,6 +1025,7 @@ function openFileInfo(item){
 // ═══════════════════════════════════════════
 function doDownload(item){
   if(!item||item.type==='dir'){ showToast('Cannot download folders directly','error'); return; }
+  // Use fullKey so subfolder files resolve correctly e.g. class/AWS DevOps/file.txt
   const url = `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${item.fullKey}`;
   const a=document.createElement('a');
   a.href=url; a.download=item.name; a.target='_blank';

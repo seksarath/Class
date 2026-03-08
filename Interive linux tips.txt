@@ -1,0 +1,34 @@
+
+****kernel version****
+uname -r
+
+****Force the Upgrade****
+do-release-upgrade
+
+**** Update****
+sudo apt update
+
+****Specific Package Updates****
+sudo apt install --only-upgrade [package_name]
+
+****To install Pro Client, run****
+sudo apt-get update && sudo apt-get install ubuntu-advantage-tools
+*******************************************
+https://www.youtube.com/watch?v=jdJhg-fWvcQ
+*******************************************
+****Livepatch****
+sudo pro enable livepatch
+
+Patch update---
+****(A)Perform Pre Checks****
+(1)lsb_release -a
+ ls -l
+ Download script pre-artifacts.sh
+(2)sh pre-artifacts.sh
+(3) apt list --upgradable
+
+****(B) Perform OS Patching****
+Download initrd.checks.sh
+(1) sudo apt upgrade -y
+(2) 
+****Perform Post checks****

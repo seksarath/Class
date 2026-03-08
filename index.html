@@ -6,268 +6,314 @@
 <title>DevOps & Cloud Resource Center</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#f0f4f8;--surface:#ffffff;--surface2:#f8fafc;--border:#e2e8f0;--border2:#cbd5e1;
+:root{
+  --bg:#f0f4f8;--surface:#fff;--surface2:#f8fafc;--border:#e2e8f0;--border2:#cbd5e1;
   --primary:#1e40af;--primary-light:#3b82f6;--primary-bg:#eff6ff;
-  --accent:#0891b2;--accent-bg:#ecfeff;
-  --success:#059669;--success-bg:#ecfdf5;
-  --warning:#d97706;--warning-bg:#fffbeb;
-  --danger:#dc2626;--danger-bg:#fef2f2;
+  --accent:#0891b2;--success:#059669;--success-bg:#ecfdf5;
+  --warning:#d97706;--warning-bg:#fffbeb;--danger:#dc2626;--danger-bg:#fef2f2;
   --text:#0f172a;--text2:#334155;--muted:#64748b;--muted2:#94a3b8;
-  --folder:#d97706;
-  --shadow-sm:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);
-  --shadow:0 4px 16px rgba(0,0,0,0.08),0 2px 6px rgba(0,0,0,0.05);
-  --shadow-lg:0 12px 40px rgba(0,0,0,0.12),0 4px 12px rgba(0,0,0,0.06);
-  --radius:12px;--radius-sm:8px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08);--shadow:0 4px 16px rgba(0,0,0,.08);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.12);--radius:12px;--radius-sm:8px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* LOGIN */
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#dbeafe 0%,#f0f9ff 40%,#ecfdf5 100%);padding:20px;position:relative;overflow:hidden;}
-#loginScreen::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.08) 0%,transparent 70%);top:-200px;right:-200px;pointer-events:none;}
-#loginScreen::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(8,145,178,0.07) 0%,transparent 70%);bottom:-100px;left:-100px;pointer-events:none;}
-.login-card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow-lg);width:100%;max-width:420px;overflow:hidden;animation:slideUp 0.5s ease both;position:relative;z-index:1;}
-.login-header{background:linear-gradient(135deg,var(--primary) 0%,#1d4ed8 100%);padding:36px 36px 28px;text-align:center;}
-.login-logo{width:56px;height:56px;background:rgba(255,255,255,0.2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.3);}
+/* ── LOGIN ── */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#dbeafe 0%,#f0f9ff 40%,#ecfdf5 100%);padding:20px;position:relative;overflow:hidden;}
+#loginScreen::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(59,130,246,.08) 0%,transparent 70%);top:-200px;right:-200px;pointer-events:none;}
+.login-card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow-lg);
+  width:100%;max-width:420px;overflow:hidden;animation:slideUp .5s ease both;position:relative;z-index:1;}
+.login-header{background:linear-gradient(135deg,var(--primary),#1d4ed8);padding:36px 36px 28px;text-align:center;}
+.login-logo{width:56px;height:56px;background:rgba(255,255,255,.2);border-radius:16px;display:flex;
+  align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px;border:1px solid rgba(255,255,255,.3);}
 .login-title{font-family:'Playfair Display',serif;font-size:22px;color:#fff;font-weight:700;line-height:1.2;margin-bottom:6px;}
-.login-subtitle{font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:.05em;}
+.login-subtitle{font-size:12px;color:rgba(255,255,255,.7);letter-spacing:.05em;}
 .login-body{padding:32px 36px 36px;}
 .tab-row{display:flex;background:var(--bg);border-radius:var(--radius-sm);padding:4px;margin-bottom:24px;gap:4px;}
-.tab-btn{flex:1;background:none;border:none;padding:8px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;}
+.tab-btn{flex:1;background:none;border:none;padding:8px;border-radius:6px;font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;}
 .tab-btn.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow-sm);}
 .form-group{margin-bottom:18px;}
-.form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:7px;letter-spacing:.04em;text-transform:uppercase;}
-.form-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:7px;
+  letter-spacing:.05em;text-transform:uppercase;}
+.form-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:all .2s;}
 .form-input:focus{border-color:var(--primary-light);box-shadow:0 0 0 3px rgba(59,130,246,.1);}
-.btn-login{width:100%;background:linear-gradient(135deg,var(--primary) 0%,#2563eb 100%);color:white;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(30,64,175,.3);margin-top:4px;}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--primary),#2563eb);color:white;border:none;
+  border-radius:var(--radius-sm);padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(30,64,175,.3);margin-top:4px;}
 .btn-login:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(30,64,175,.4);}
-.login-error{background:var(--danger-bg);border:1px solid #fecaca;color:var(--danger);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin-top:14px;display:none;text-align:center;}
-.demo-hint{margin-top:20px;background:var(--primary-bg);border:1px solid #bfdbfe;border-radius:var(--radius-sm);padding:12px 14px;font-size:11.5px;color:var(--primary);line-height:1.7;}
-.demo-hint strong{font-weight:600;}
+.login-error{background:var(--danger-bg);border:1px solid #fecaca;color:var(--danger);border-radius:var(--radius-sm);
+  padding:10px 14px;font-size:13px;margin-top:14px;display:none;text-align:center;}
 
-/* TOPNAV */
+/* ── APP ── */
 #appScreen{display:none;min-height:100vh;}
-.topnav{background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:50;}
-.topnav-inner{max-width:1300px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
-.nav-brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
-.brand-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(30,64,175,.25);}
-.brand-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);line-height:1.2;}
-.brand-sub{font-size:10px;color:var(--muted);font-weight:400;font-family:'DM Sans',sans-serif;letter-spacing:.05em;}
-.nav-search{flex:1;max-width:380px;position:relative;}
-.nav-search input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;padding:8px 16px 8px 38px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
-.nav-search input:focus{border-color:var(--primary-light);}
-.nav-search input::placeholder{color:var(--muted2);}
-.nav-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;}
-.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.user-pill{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:24px;padding:5px 12px 5px 6px;font-size:13px;}
-.user-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;}
-.avatar-admin{background:linear-gradient(135deg,var(--primary),var(--accent));}
-.avatar-user{background:linear-gradient(135deg,var(--success),#10b981);}
-.user-name{font-weight:500;color:var(--text2);}
-.user-role{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
-.role-admin{background:var(--primary-bg);color:var(--primary);}
-.role-user{background:var(--success-bg);color:var(--success);}
-.btn-icon{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .2s;color:var(--muted);}
-.btn-icon:hover{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
-.live-clock{text-align:right;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;min-width:110px;}
-.clock-time{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--primary);line-height:1.1;letter-spacing:.02em;}
-.clock-date{font-size:9.5px;color:var(--muted);letter-spacing:.03em;}
+.topnav{background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);
+  position:sticky;top:0;z-index:50;}
+.topnav-inner{max-width:1300px;margin:0 auto;padding:0 20px;height:64px;display:flex;
+  align-items:center;justify-content:space-between;gap:12px;}
+.nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.brand-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--primary),var(--accent));
+  border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.brand-text{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text);line-height:1.2;}
+.brand-sub{font-size:10px;color:var(--muted);font-family:'DM Sans',sans-serif;}
+.nav-center{flex:1;max-width:380px;position:relative;}
+.nav-center input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;
+  padding:8px 16px 8px 38px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
+.nav-center input:focus{border-color:var(--primary-light);}
+.nav-center input::placeholder{color:var(--muted2);}
+.nav-si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.live-clock{text-align:right;padding:4px 10px;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;min-width:105px;}
+.clock-t{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--primary);line-height:1.1;}
+.clock-d{font-size:9px;color:var(--muted);}
+.user-pill{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);
+  border-radius:24px;padding:4px 12px 4px 5px;font-size:13px;}
+.u-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:white;}
+.av-admin{background:linear-gradient(135deg,var(--primary),var(--accent));}
+.av-user{background:linear-gradient(135deg,var(--success),#10b981);}
+.u-name{font-weight:500;color:var(--text2);font-size:13px;}
+.u-role{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;text-transform:uppercase;}
+.r-admin{background:var(--primary-bg);color:var(--primary);}
+.r-user{background:var(--success-bg);color:var(--success);}
+.btn-ic{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;
+  transition:all .2s;color:var(--muted);}
+.btn-ic:hover{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
 
-/* BREADCRUMB NAV */
-.folder-breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;margin-bottom:16px;flex-wrap:wrap;}
-.bc-item{color:var(--primary);cursor:pointer;font-weight:500;padding:3px 8px;border-radius:5px;transition:background .15s;}
-.bc-item:hover{background:var(--primary-bg);}
-.bc-sep{color:var(--muted2);font-size:12px;}
-.bc-current{color:var(--text2);font-weight:600;padding:3px 8px;}
-
-/* CARD ACTIONS 3-btn */
-.card-actions-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:10px;}
-.card-btn-open{background:#fff7ed;color:#c2410c;border-color:#fed7aa;}
-.card-btn-open:hover{background:#ea580c;color:white;}
-
-/* FILE PREVIEW inside modal */
-.file-preview-box{background:#1e293b;border-radius:var(--radius-sm);padding:16px;overflow:auto;max-height:340px;margin-bottom:14px;}
-.file-preview-box pre{font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2e8f0;line-height:1.7;white-space:pre-wrap;word-break:break-word;}
-.preview-placeholder{text-align:center;padding:32px;color:var(--muted);}
-.preview-placeholder .prev-icon{font-size:42px;margin-bottom:10px;}
-.preview-placeholder p{font-size:13px;}
-
-/* FOLDER INSIDE VIEW */
-.folder-inside-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
-.folder-inside-empty{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
-
-/* PAGE */
-.page-body{max-width:1300px;margin:0 auto;padding:28px 24px;}
+/* ── PAGE ── */
+.page-body{max-width:1300px;margin:0 auto;padding:24px 20px;}
 
 /* HERO */
-.hero-banner{background:linear-gradient(135deg,var(--primary) 0%,#1d4ed8 50%,var(--accent) 100%);border-radius:18px;padding:32px 40px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden;position:relative;animation:fadeDown .5s ease both;}
-.hero-banner::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.05);right:-80px;top:-80px;}
-.hero-banner::after{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);right:60px;bottom:-60px;}
-.hero-left{position:relative;z-index:1;}
-.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:8px;}
-.hero-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:800;color:white;line-height:1.2;margin-bottom:8px;}
-.hero-desc{font-size:14px;color:rgba(255,255,255,.75);max-width:480px;line-height:1.6;}
-.hero-stats{display:flex;gap:24px;position:relative;z-index:1;flex-shrink:0;}
-.hero-stat{text-align:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 20px;backdrop-filter:blur(10px);}
-.hero-stat-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:white;line-height:1;margin-bottom:4px;}
-.hero-stat-label{font-size:10px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;}
+.hero{background:linear-gradient(135deg,var(--primary),#1d4ed8 60%,var(--accent));border-radius:18px;
+  padding:28px 36px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;
+  gap:20px;position:relative;overflow:hidden;animation:fadeDown .5s ease both;}
+.hero::before{content:'';position:absolute;width:280px;height:280px;border-radius:50%;
+  background:rgba(255,255,255,.05);right:-60px;top:-60px;}
+.hero-l{position:relative;z-index:1;}
+.hero-eye{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px;}
+.hero-h{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:white;line-height:1.2;margin-bottom:6px;}
+.hero-d{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;max-width:460px;}
+.hero-stats{display:flex;gap:16px;flex-shrink:0;position:relative;z-index:1;}
+.hstat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:12px;
+  padding:12px 18px;text-align:center;backdrop-filter:blur(8px);}
+.hstat-n{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:white;line-height:1;}
+.hstat-l{font-size:9px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
+
+/* S3 STATUS BAR */
+.s3-status{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:var(--radius-sm);
+  font-size:12px;margin-bottom:20px;border:1px solid;}
+.s3-status.loading{background:#fefce8;border-color:#fde68a;color:#92400e;}
+.s3-status.success{background:var(--success-bg);border-color:#a7f3d0;color:#065f46;}
+.s3-status.error{background:var(--danger-bg);border-color:#fecaca;color:#991b1b;}
+.s3-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.s3-dot.spin{animation:spin 1s linear infinite;border:2px solid #d97706;border-top-color:transparent;border-radius:50%;}
+.s3-dot.green{background:#10b981;}
+.s3-dot.red{background:#ef4444;}
+.btn-refresh{margin-left:auto;background:none;border:1px solid currentColor;border-radius:5px;
+  padding:3px 10px;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;color:inherit;transition:all .2s;}
+.btn-refresh:hover{opacity:.7;}
 
 /* STATS ROW */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px;animation:fadeDown .5s .05s ease both;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm);}
-.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.stat-info-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);line-height:1;}
-.stat-info-label{font-size:11px;color:var(--muted);margin-top:2px;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-sm);}
+.stat-ic{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.stat-n{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);line-height:1;}
+.stat-lb{font-size:10px;color:var(--muted);margin-top:1px;}
 
 /* ADMIN PANEL */
-.admin-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:28px;box-shadow:var(--shadow-sm);animation:fadeDown .5s .1s ease both;overflow:hidden;}
-.panel-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-.panel-title{font-size:15px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;}
-.panel-body{padding:24px;}
-.user-table-wrap{overflow-x:auto;}
-.user-table{width:100%;border-collapse:collapse;font-size:13px;}
-.user-table th{text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:8px 12px;border-bottom:2px solid var(--border);}
-.user-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
-.user-table tr:last-child td{border-bottom:none;}
-.user-table tr:hover td{background:var(--surface2);}
-.td-user{display:flex;align-items:center;gap:9px;}
-.td-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--success),#10b981);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;}
-.td-name{font-weight:500;color:var(--text);}
-.td-uname{font-size:11px;color:var(--muted);}
-.access-count{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--primary);background:var(--primary-bg);padding:3px 10px;border-radius:12px;}
-.btn-sm{padding:6px 12px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
-.btn-primary-sm{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
-.btn-primary-sm:hover{background:var(--primary);color:white;}
-.btn-danger-sm{background:var(--danger-bg);color:var(--danger);border-color:#fecaca;}
-.btn-danger-sm:hover{background:var(--danger);color:white;}
-.btn-success-sm{background:var(--success-bg);color:var(--success);border-color:#a7f3d0;}
-.btn-success-sm:hover{background:var(--success);color:white;}
-.btn-add-user{display:flex;align-items:center;gap:7px;background:var(--primary);color:white;border:none;border-radius:var(--radius-sm);padding:9px 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(30,64,175,.2);}
-.btn-add-user:hover{background:#1d4ed8;transform:translateY(-1px);}
-.user-limit-badge{font-size:12px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:4px 12px;}
-.user-limit-badge strong{color:var(--warning);}
+.admin-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  margin-bottom:24px;box-shadow:var(--shadow-sm);overflow:hidden;}
+.panel-hd{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;
+  justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.panel-t{font-size:14px;font-weight:600;color:var(--text);}
+.panel-bd{padding:20px 22px;}
+.utbl{width:100%;border-collapse:collapse;font-size:13px;}
+.utbl th{text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.06em;padding:7px 10px;border-bottom:2px solid var(--border);}
+.utbl td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.utbl tr:last-child td{border-bottom:none;}
+.utbl tr:hover td{background:var(--surface2);}
+.td-u{display:flex;align-items:center;gap:8px;}
+.td-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--success),#10b981);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.td-nm{font-weight:500;color:var(--text);font-size:13px;}
+.td-un{font-size:11px;color:var(--muted);}
+.acc-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;
+  color:var(--primary);background:var(--primary-bg);padding:2px 9px;border-radius:11px;}
+.btn-sm{padding:5px 11px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:11px;
+  font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .2s;display:inline-flex;align-items:center;gap:4px;}
+.bp{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
+.bp:hover{background:var(--primary);color:white;}
+.bd{background:var(--danger-bg);color:var(--danger);border-color:#fecaca;}
+.bd:hover{background:var(--danger);color:white;}
+.bs{background:var(--success-bg);color:var(--success);border-color:#a7f3d0;}
+.bs:hover{background:var(--success);color:white;}
+.btn-add{display:flex;align-items:center;gap:6px;background:var(--primary);color:white;border:none;
+  border-radius:var(--radius-sm);padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-add:hover{background:#1d4ed8;transform:translateY(-1px);}
+.lim-badge{font-size:11px;color:var(--muted);background:var(--bg);border:1px solid var(--border);
+  border-radius:11px;padding:3px 10px;}
+.lim-badge strong{color:var(--warning);}
 
 /* EXPLORER */
-.explorer-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;animation:fadeDown .5s .15s ease both;flex-wrap:wrap;}
-.section-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);}
-.section-subtitle{font-size:12px;color:var(--muted);margin-top:2px;}
-.explorer-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.filter-tabs{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;gap:2px;flex-wrap:wrap;}
-.filter-tab{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--muted);padding:5px 10px;border-radius:5px;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.filter-tab.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow-sm);}
-.view-toggle-btns{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
-.vt-btn{background:none;border:none;padding:7px 10px;font-size:14px;color:var(--muted);cursor:pointer;transition:all .2s;}
-.vt-btn.active{background:var(--primary);color:white;}
+.exp-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.exp-t{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--text);}
+.exp-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.exp-ctrl{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.ftabs{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;gap:2px;}
+.ftab{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:500;
+  color:var(--muted);padding:5px 9px;border-radius:5px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.ftab.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow-sm);}
+.vtbtns{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+.vtb{background:none;border:none;padding:6px 9px;font-size:14px;color:var(--muted);cursor:pointer;transition:all .2s;}
+.vtb.active{background:var(--primary);color:white;}
+
+/* BREADCRUMB */
+.breadcrumb-bar{display:flex;align-items:center;gap:6px;font-size:13px;margin-bottom:14px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;}
+.bc{color:var(--primary);cursor:pointer;font-weight:500;padding:2px 7px;border-radius:4px;transition:background .15s;}
+.bc:hover{background:var(--primary-bg);}
+.bc-sep{color:var(--muted2);}
+.bc-cur{color:var(--text2);font-weight:600;padding:2px 7px;}
 
 /* FILE GRID */
-.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;}
-.file-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px 16px 14px;cursor:pointer;transition:all .2s;position:relative;box-shadow:var(--shadow-sm);}
-.file-card:hover{border-color:var(--primary-light);box-shadow:0 6px 20px rgba(30,64,175,.1);transform:translateY(-2px);}
-.file-card-icon{font-size:34px;margin-bottom:10px;display:block;line-height:1;}
-.file-card-name{font-size:12.5px;font-weight:600;color:var(--text);word-break:break-word;line-height:1.4;margin-bottom:5px;}
-.file-card-meta{font-size:10.5px;color:var(--muted);line-height:1.5;}
-.file-type-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em;}
-.card-actions{display:flex;gap:6px;margin-top:10px;}
-.card-btn{flex:1;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px;}
-.card-btn-view{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
-.card-btn-view:hover{background:var(--primary);color:white;}
-.card-btn-dl{background:var(--success-bg);color:var(--success);border-color:#a7f3d0;}
-.card-btn-dl:hover{background:var(--success);color:white;}
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;}
+.fcard{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:16px 14px 12px;transition:all .2s;position:relative;box-shadow:var(--shadow-sm);}
+.fcard:hover{border-color:var(--primary-light);box-shadow:0 5px 18px rgba(30,64,175,.1);transform:translateY(-2px);}
+.fc-icon{font-size:32px;margin-bottom:8px;display:block;line-height:1;}
+.fc-name{font-size:12px;font-weight:600;color:var(--text);word-break:break-word;line-height:1.4;margin-bottom:4px;}
+.fc-meta{font-size:10px;color:var(--muted);line-height:1.5;}
+.ftbadge{position:absolute;top:9px;right:9px;font-size:8.5px;font-weight:700;padding:2px 6px;
+  border-radius:5px;text-transform:uppercase;letter-spacing:.04em;}
+.card-btns{display:grid;gap:4px;margin-top:9px;}
+.card-btns-3{grid-template-columns:1fr 1fr 1fr;}
+.card-btns-2{grid-template-columns:1fr 1fr;}
+.cbtn{padding:4px 6px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid transparent;
+  font-family:'DM Sans',sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:3px;}
+.cb-open{background:#fff7ed;color:#c2410c;border-color:#fed7aa;}
+.cb-open:hover{background:#ea580c;color:white;}
+.cb-save{background:var(--success-bg);color:var(--success);border-color:#a7f3d0;}
+.cb-save:hover{background:var(--success);color:white;}
+.cb-info{background:var(--primary-bg);color:var(--primary);border-color:#bfdbfe;}
+.cb-info:hover{background:var(--primary);color:white;}
 
-/* FILE LIST */
-.list-header-row{display:grid;grid-template-columns:36px 1fr 90px 110px 80px 90px;gap:12px;padding:8px 16px;font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border);margin-bottom:4px;}
-.list-row{display:grid;grid-template-columns:36px 1fr 90px 110px 80px 90px;gap:12px;align-items:center;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:4px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow-sm);font-size:13px;}
-.list-row:hover{border-color:var(--primary-light);background:var(--primary-bg);}
-.list-icon{font-size:20px;text-align:center;}
-.list-name-col{font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.list-date{color:var(--muted);font-size:11.5px;}
-.list-size{color:var(--muted);font-size:11.5px;text-align:right;}
-.list-actions{display:flex;gap:5px;justify-content:flex-end;}
+/* LIST VIEW */
+.lhdr{display:grid;grid-template-columns:32px 1fr 80px 110px 75px 100px;gap:10px;padding:7px 14px;
+  font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;
+  border-bottom:2px solid var(--border);margin-bottom:3px;}
+.lrow{display:grid;grid-template-columns:32px 1fr 80px 110px 75px 100px;gap:10px;align-items:center;
+  padding:9px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  margin-bottom:3px;box-shadow:var(--shadow-sm);font-size:12px;transition:all .15s;}
+.lrow:hover{border-color:var(--primary-light);background:var(--primary-bg);}
+.lico{font-size:18px;text-align:center;}
+.lnm{font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ldt{color:var(--muted);font-size:11px;}
+.lsz{color:var(--muted);font-size:11px;text-align:right;}
+.lact{display:flex;gap:4px;justify-content:flex-end;}
+
+/* LOADING SKELETON */
+.skel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;}
+.skel-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:16px 14px;height:160px;position:relative;overflow:hidden;}
+.skel-card::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.6) 50%,transparent 100%);
+  animation:shimmer 1.5s infinite;}
+.skel-line{background:#e2e8f0;border-radius:4px;margin-bottom:8px;}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 
 /* TYPE BADGE COLORS */
-.tb-dir{background:#fef3c7;color:#92400e;}
-.tb-txt{background:#dbeafe;color:#1e40af;}
-.tb-sh{background:#d1fae5;color:#065f46;}
-.tb-html{background:#fee2e2;color:#991b1b;}
-.tb-xlsx{background:#dcfce7;color:#14532d;}
-.tb-docx{background:#ede9fe;color:#4c1d95;}
-.tb-zip{background:#ffedd5;color:#7c2d12;}
-.tb-png{background:#fae8ff;color:#701a75;}
-.tb-log{background:#f1f5f9;color:#475569;}
-.tb-md{background:#cffafe;color:#164e63;}
-.tb-other{background:#f1f5f9;color:#475569;}
+.tb-dir{background:#fef3c7;color:#92400e;}.tb-txt{background:#dbeafe;color:#1e40af;}
+.tb-sh{background:#d1fae5;color:#065f46;}.tb-html{background:#fee2e2;color:#991b1b;}
+.tb-xlsx{background:#dcfce7;color:#14532d;}.tb-docx{background:#ede9fe;color:#4c1d95;}
+.tb-zip{background:#ffedd5;color:#7c2d12;}.tb-png{background:#fae8ff;color:#701a75;}
+.tb-jpg{background:#fce7f3;color:#831843;}.tb-pdf{background:#fef3c7;color:#78350f;}
+.tb-log{background:#f1f5f9;color:#475569;}.tb-md{background:#cffafe;color:#164e63;}
+.tb-yml{background:#f0fdf4;color:#14532d;}.tb-other{background:#f1f5f9;color:#475569;}
 
-.empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
-.empty-icon{font-size:48px;margin-bottom:12px;opacity:.5;}
-.empty-text{font-size:14px;}
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted);}
+.empty-ico{font-size:44px;margin-bottom:10px;opacity:.5;}
 
 /* MODALS */
-.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease;}
-.modal-box{background:var(--surface);border-radius:16px;box-shadow:var(--shadow-lg);width:100%;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;animation:scaleUp .2s ease both;}
-.modal-box-sm{max-width:460px;}
-.modal-box-md{max-width:620px;}
-.modal-box-lg{max-width:760px;}
-.modal-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.modal-head-title{font-size:16px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
-.modal-close-btn{background:var(--bg);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted);transition:all .2s;}
-.modal-close-btn:hover{background:var(--danger-bg);color:var(--danger);border-color:#fecaca;}
-.modal-content{padding:24px;overflow-y:auto;flex:1;}
-.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
-.btn-modal-cancel{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:9px 18px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;}
-.btn-modal-ok{background:var(--primary);color:white;border:none;border-radius:var(--radius-sm);padding:9px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(30,64,175,.25);}
-.btn-modal-ok:hover{background:#1d4ed8;transform:translateY(-1px);}
-.access-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
-.checkbox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px;}
-.checkbox-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;font-size:12.5px;}
-.checkbox-item:hover{border-color:var(--primary-light);background:var(--primary-bg);}
-.checkbox-item input{accent-color:var(--primary);width:14px;height:14px;cursor:pointer;}
-.checkbox-item.checked{border-color:#bfdbfe;background:var(--primary-bg);}
-.cb-icon{font-size:15px;}
-.cb-name{font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.detail-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
-.detail-info-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;}
-.detail-info-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px;}
-.detail-info-val{font-size:13px;font-weight:600;color:var(--text);}
-.dl-btn-big{width:100%;background:linear-gradient(135deg,var(--success),#10b981);color:white;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 10px rgba(5,150,105,.25);}
-.dl-btn-big:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(5,150,105,.35);}
-.s3-note{background:var(--warning-bg);border:1px solid #fde68a;border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:#78350f;margin-top:12px;line-height:1.6;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.modal-ov{position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn .2s ease;}
+.mbox{background:var(--surface);border-radius:16px;box-shadow:var(--shadow-lg);width:100%;
+  max-height:88vh;display:flex;flex-direction:column;overflow:hidden;animation:scaleUp .2s ease both;}
+.mbox-sm{max-width:440px;}.mbox-md{max-width:620px;}.mbox-lg{max-width:780px;}
+.mhd{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.mhd-t{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px;}
+.mcls{background:var(--bg);border:1px solid var(--border);border-radius:7px;width:30px;height:30px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--muted);transition:all .2s;}
+.mcls:hover{background:var(--danger-bg);color:var(--danger);border-color:#fecaca;}
+.mcon{padding:20px 22px;overflow-y:auto;flex:1;}
+.mft{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
+.btn-cancel{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:8px 16px;
+  border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;}
+.btn-ok{background:var(--primary);color:white;border:none;border-radius:var(--radius-sm);padding:8px 16px;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;
+  box-shadow:0 2px 8px rgba(30,64,175,.25);}
+.btn-ok:hover{background:#1d4ed8;}
+.di-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.di-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px;}
+.di-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px;}
+.di-val{font-size:12px;font-weight:600;color:var(--text);}
+.preview-box{background:#1e293b;border-radius:var(--radius-sm);padding:14px;overflow:auto;max-height:300px;margin-bottom:12px;}
+.preview-box pre{font-family:monospace;font-size:12px;color:#e2e8f0;line-height:1.7;white-space:pre-wrap;word-break:break-word;}
+.prev-ph{text-align:center;padding:28px;color:var(--muted);}
+.prev-ph .phi{font-size:38px;margin-bottom:8px;}
+.acc-section{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+  margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.cb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:5px;}
+.cbi{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid var(--border);border-radius:7px;
+  cursor:pointer;transition:all .15s;font-size:12px;}
+.cbi:hover{border-color:var(--primary-light);background:var(--primary-bg);}
+.cbi input{accent-color:var(--primary);width:13px;height:13px;cursor:pointer;}
+.cbi.checked{border-color:#bfdbfe;background:var(--primary-bg);}
+.cbi-name{font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-big{width:100%;border:none;border-radius:var(--radius-sm);padding:12px;font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;gap:7px;}
+.btn-big-dl{background:linear-gradient(135deg,var(--success),#10b981);color:white;box-shadow:0 3px 10px rgba(5,150,105,.25);}
+.btn-big-dl:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(5,150,105,.35);}
+.btn-big-open{background:linear-gradient(135deg,var(--primary),#2563eb);color:white;box-shadow:0 3px 10px rgba(30,64,175,.25);}
+.btn-big-open:hover{transform:translateY(-1px);}
+.btn-big-folder{background:linear-gradient(135deg,#d97706,#f59e0b);color:white;}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:white;padding:12px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);z-index:999;display:flex;align-items:center;gap:8px;animation:slideRight .3s ease both;max-width:320px;}
-.toast.success{background:var(--success);}
-.toast.error{background:var(--danger);}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--text);color:white;padding:11px 16px;
+  border-radius:var(--radius-sm);font-size:12px;font-weight:500;box-shadow:var(--shadow-lg);z-index:999;
+  display:flex;align-items:center;gap:7px;animation:slideR .3s ease both;max-width:300px;}
+.toast.success{background:var(--success);}.toast.error{background:var(--danger);}
 
-/* ANIMATIONS */
 @keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes scaleUp{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-@keyframes slideRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-
-::-webkit-scrollbar{width:6px;height:6px;}
-::-webkit-scrollbar-track{background:transparent;}
+@keyframes slideR{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
-
 @media(max-width:768px){
-  .hero-stats{display:none;}
-  .hero-title{font-size:22px;}
-  .hero-banner{padding:24px;}
-  .file-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
-  .list-header-row,.list-row{grid-template-columns:28px 1fr 80px 70px;}
-  .list-row>*:nth-child(4),.list-header-row>*:nth-child(4),
-  .list-row>*:nth-child(5),.list-header-row>*:nth-child(5),
-  .list-row>*:nth-child(6),.list-header-row>*:nth-child(6){display:none;}
-  .form-row{grid-template-columns:1fr;}
-  .detail-info-grid{grid-template-columns:1fr;}
+  .hero-stats{display:none;}.hero-h{font-size:21px;}.hero{padding:20px 24px;}
+  .file-grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));}
+  .lhdr,.lrow{grid-template-columns:28px 1fr 65px 65px;}
+  .lrow>*:nth-child(n+4),.lhdr>*:nth-child(n+4){display:none;}
+  .form-row{grid-template-columns:1fr;}.di-grid{grid-template-columns:1fr;}
+  .live-clock{display:none;}
 }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ═══════ LOGIN ═══════ -->
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-header">
@@ -277,725 +323,807 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div class="login-body">
       <div class="tab-row">
-        <button class="tab-btn active" onclick="switchLoginTab('admin')">🔐 Admin Login</button>
-        <button class="tab-btn" onclick="switchLoginTab('user')">👤 User Login</button>
+        <button class="tab-btn active" onclick="switchTab('admin')">🔐 Admin Login</button>
+        <button class="tab-btn" onclick="switchTab('user')">👤 User Login</button>
       </div>
       <div class="form-group">
         <label class="form-label">Username</label>
-        <input class="form-input" id="loginUser" type="text" placeholder="Enter username" autocomplete="off">
+        <input class="form-input" id="lUser" type="text" placeholder="Enter username" autocomplete="off">
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input class="form-input" id="loginPass" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+        <input class="form-input" id="lPass" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
       </div>
       <button class="btn-login" onclick="doLogin()">Sign In →</button>
-      <div class="login-error" id="loginError">❌ Invalid username or password</div>
-
+      <div class="login-error" id="loginErr">❌ Invalid username or password</div>
     </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- ═══════ APP ═══════ -->
 <div id="appScreen">
   <nav class="topnav">
     <div class="topnav-inner">
       <div class="nav-brand">
         <div class="brand-icon">☁️</div>
-        <div>
-          <div class="brand-text">DevOps & Cloud</div>
-          <div class="brand-sub">Resource Center · E:\ Class Drive</div>
-        </div>
+        <div><div class="brand-text">DevOps & Cloud</div><div class="brand-sub">Resource Center</div></div>
       </div>
-      <div class="nav-search">
-        <span class="nav-search-icon">🔍</span>
+      <div class="nav-center">
+        <span class="nav-si">🔍</span>
         <input type="text" id="searchBox" placeholder="Search files and folders…" oninput="renderExplorer()">
       </div>
       <div class="nav-right">
-        <div class="live-clock"><div class="clock-time" id="clockTime">00:00:00</div><div class="clock-date" id="clockDate">--</div></div>
+        <div class="live-clock"><div class="clock-t" id="clockT">00:00:00</div><div class="clock-d" id="clockD">--</div></div>
         <div class="user-pill">
-          <div class="user-avatar" id="navAvatar"></div>
-          <span class="user-name" id="navName"></span>
-          <span class="user-role" id="navRole"></span>
+          <div class="u-av" id="navAv"></div>
+          <span class="u-name" id="navNm"></span>
+          <span class="u-role" id="navRl"></span>
         </div>
-        <button class="btn-icon" onclick="doLogout()" title="Logout">🚪</button>
+        <button class="btn-ic" onclick="doLogout()" title="Logout">🚪</button>
       </div>
     </div>
   </nav>
 
   <div class="page-body">
-    <div class="hero-banner">
-      <div class="hero-left">
-        <div class="hero-eyebrow">E:\ Class Drive — Secure Portal</div>
-        <div class="hero-title" id="heroBannerTitle">DevOps & Cloud<br>Resource Center</div>
-        <div class="hero-desc" id="heroBannerDesc">Access your training materials, guides, scripts, and class resources — all in one place.</div>
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-l">
+        <div class="hero-eye">Live S3 File Portal</div>
+        <div class="hero-h" id="heroH">DevOps & Cloud<br>Resource Center</div>
+        <div class="hero-d" id="heroD">Files load live from your S3 bucket — always up to date.</div>
       </div>
       <div class="hero-stats">
-        <div class="hero-stat"><div class="hero-stat-num" id="heroStatFiles">43</div><div class="hero-stat-label">Total Items</div></div>
-        <div class="hero-stat"><div class="hero-stat-num" id="heroStatFolders">13</div><div class="hero-stat-label">Folders</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">108 GB</div><div class="hero-stat-label">Free Space</div></div>
+        <div class="hstat"><div class="hstat-n" id="hsFiles">—</div><div class="hstat-l">Files</div></div>
+        <div class="hstat"><div class="hstat-n" id="hsFolders">—</div><div class="hstat-l">Folders</div></div>
+        <div class="hstat"><div class="hstat-n" id="hsTotal">—</div><div class="hstat-l">Total</div></div>
       </div>
     </div>
 
+    <!-- S3 Status Bar -->
+    <div class="s3-status loading" id="s3Status">
+      <div class="s3-dot spin" id="s3Dot"></div>
+      <span id="s3Msg">Connecting to S3 bucket…</span>
+      <button class="btn-refresh" onclick="loadS3Files()">↻ Refresh</button>
+    </div>
+
+    <!-- Stats Row -->
     <div class="stats-row" id="statsRow"></div>
 
     <!-- Admin Panel -->
     <div class="admin-panel" id="adminPanel" style="display:none">
-      <div class="panel-header">
-        <div class="panel-title">⚙️ Admin — User Management</div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <span class="user-limit-badge" id="limitBadge"></span>
-          <button class="btn-add-user" onclick="openAddUser()">＋ Add User</button>
+      <div class="panel-hd">
+        <div class="panel-t">⚙️ User Management</div>
+        <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+          <span class="lim-badge" id="limBadge"></span>
+          <button class="btn-add" onclick="openAddUser()">＋ Add User</button>
         </div>
       </div>
-      <div class="panel-body">
-        <div class="user-table-wrap">
-          <table class="user-table" id="userTable"></table>
-        </div>
-      </div>
+      <div class="panel-bd"><table class="utbl" id="userTable"></table></div>
     </div>
 
     <!-- Explorer -->
-    <div class="explorer-header">
-      <div>
-        <div class="section-title" id="explorerTitle">📂 All Files & Folders</div>
-        <div class="section-subtitle" id="explorerSub"></div>
-      </div>
-      <div class="explorer-controls">
-        <div class="filter-tabs">
-          <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
-          <button class="filter-tab" onclick="setFilter('dir',this)">📁 Folders</button>
-          <button class="filter-tab" onclick="setFilter('txt',this)">📄 Text</button>
-          <button class="filter-tab" onclick="setFilter('script',this)">⚙️ Scripts</button>
-          <button class="filter-tab" onclick="setFilter('web',this)">🌐 Web</button>
-          <button class="filter-tab" onclick="setFilter('office',this)">📊 Office</button>
+    <div class="exp-hd">
+      <div><div class="exp-t" id="expTitle">📂 Files & Folders</div><div class="exp-sub" id="expSub"></div></div>
+      <div class="exp-ctrl">
+        <div class="ftabs">
+          <button class="ftab active" onclick="setFilter('all',this)">All</button>
+          <button class="ftab" onclick="setFilter('dir',this)">📁 Folders</button>
+          <button class="ftab" onclick="setFilter('txt',this)">📄 Text</button>
+          <button class="ftab" onclick="setFilter('script',this)">⚙️ Scripts</button>
+          <button class="ftab" onclick="setFilter('web',this)">🌐 Web</button>
+          <button class="ftab" onclick="setFilter('office',this)">📊 Office</button>
+          <button class="ftab" onclick="setFilter('media',this)">🖼️ Media</button>
         </div>
-        <div class="view-toggle-btns">
-          <button class="vt-btn active" id="vtnGrid" onclick="setView('grid')" title="Grid">⊞</button>
-          <button class="vt-btn" id="vtnList" onclick="setView('list')" title="List">☰</button>
+        <div class="vtbtns">
+          <button class="vtb active" id="vbGrid" onclick="setView('grid')" title="Grid">⊞</button>
+          <button class="vtb" id="vbList" onclick="setView('list')" title="List">☰</button>
         </div>
       </div>
     </div>
-    <div id="explorerContainer"></div>
+    <div id="breadcrumbBar" style="display:none" class="breadcrumb-bar"></div>
+    <div id="explorerCont"></div>
   </div>
 </div>
 
-<!-- File Detail / Preview Modal -->
+<!-- File Preview Modal -->
 <div id="fileModal" style="display:none">
-  <div class="modal-overlay" onclick="closeModal('fileModal',event)">
-    <div class="modal-box modal-box-lg">
-      <div class="modal-head">
-        <div class="modal-head-title" id="fileModalTitle"></div>
-        <button class="modal-close-btn" onclick="closeModal('fileModal')">✕</button>
-      </div>
-      <div class="modal-content" id="fileModalContent"></div>
+  <div class="modal-ov" onclick="closeMod('fileModal',event)">
+    <div class="mbox mbox-lg">
+      <div class="mhd"><div class="mhd-t" id="fmTitle"></div><button class="mcls" onclick="closeMod('fileModal')">✕</button></div>
+      <div class="mcon" id="fmContent"></div>
     </div>
   </div>
 </div>
 
-<!-- Folder Inside Modal -->
+<!-- Folder Modal -->
 <div id="folderModal" style="display:none">
-  <div class="modal-overlay" onclick="closeModal('folderModal',event)">
-    <div class="modal-box modal-box-lg">
-      <div class="modal-head">
-        <div class="modal-head-title" id="folderModalTitle"></div>
-        <button class="modal-close-btn" onclick="closeModal('folderModal')">✕</button>
-      </div>
-      <div class="modal-content" id="folderModalContent"></div>
+  <div class="modal-ov" onclick="closeMod('folderModal',event)">
+    <div class="mbox mbox-lg">
+      <div class="mhd"><div class="mhd-t" id="foTitle"></div><button class="mcls" onclick="closeMod('folderModal')">✕</button></div>
+      <div class="mcon" id="foContent"></div>
     </div>
   </div>
 </div>
 
 <!-- Add User Modal -->
-<div id="addUserModal" style="display:none">
-  <div class="modal-overlay" onclick="closeModal('addUserModal',event)">
-    <div class="modal-box modal-box-sm">
-      <div class="modal-head">
-        <div class="modal-head-title">👤 Add New User</div>
-        <button class="modal-close-btn" onclick="closeModal('addUserModal')">✕</button>
-      </div>
-      <div class="modal-content">
+<div id="addModal" style="display:none">
+  <div class="modal-ov" onclick="closeMod('addModal',event)">
+    <div class="mbox mbox-sm">
+      <div class="mhd"><div class="mhd-t">👤 Add New User</div><button class="mcls" onclick="closeMod('addModal')">✕</button></div>
+      <div class="mcon">
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Full Name</label>
-            <input class="form-input" id="newFullName" placeholder="e.g. Ravi Kumar">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Username</label>
-            <input class="form-input" id="newUsername" placeholder="e.g. ravi">
-          </div>
+          <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="nName" placeholder="e.g. Ravi Kumar"></div>
+          <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="nUser" placeholder="e.g. ravi"></div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input class="form-input" id="newPassword" type="password" placeholder="Set password">
-        </div>
-        <div id="addUserError" style="color:var(--danger);font-size:12px;margin-top:4px;display:none"></div>
+        <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="nPass" type="password" placeholder="Set password"></div>
+        <div id="addErr" style="color:var(--danger);font-size:11px;margin-top:3px;display:none"></div>
       </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" onclick="closeModal('addUserModal')">Cancel</button>
-        <button class="btn-modal-ok" onclick="saveNewUser()">Create User</button>
-      </div>
+      <div class="mft"><button class="btn-cancel" onclick="closeMod('addModal')">Cancel</button><button class="btn-ok" onclick="saveUser()">Create User</button></div>
     </div>
   </div>
 </div>
 
-<!-- Access Control Modal -->
-<div id="accessModal" style="display:none">
-  <div class="modal-overlay" onclick="closeModal('accessModal',event)">
-    <div class="modal-box modal-box-lg">
-      <div class="modal-head">
-        <div class="modal-head-title" id="accessModalTitle">🔑 Manage Access</div>
-        <button class="modal-close-btn" onclick="closeModal('accessModal')">✕</button>
-      </div>
-      <div class="modal-content" id="accessModalContent"></div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" onclick="closeModal('accessModal')">Cancel</button>
-        <button class="btn-modal-ok" onclick="saveAccess()">💾 Save Access</button>
-      </div>
+<!-- Access Modal -->
+<div id="accModal" style="display:none">
+  <div class="modal-ov" onclick="closeMod('accModal',event)">
+    <div class="mbox mbox-lg">
+      <div class="mhd"><div class="mhd-t" id="accTitle">🔑 Manage Access</div><button class="mcls" onclick="closeMod('accModal')">✕</button></div>
+      <div class="mcon" id="accContent"></div>
+      <div class="mft"><button class="btn-cancel" onclick="closeMod('accModal')">Cancel</button><button class="btn-ok" onclick="saveAccess()">💾 Save</button></div>
     </div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════
-// CONFIGURATION
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// ⚙️  CONFIGURATION  — Edit these values
+// ═══════════════════════════════════════════
 
-// ⬇️ CHANGE THIS NUMBER to set max users (e.g. 100, 500, 1000)
-const USER_LIMIT = 10;
+// Your S3 bucket name and region
+const S3_BUCKET   = 'allclassindex';
+const S3_REGION   = 'us-east-1';
+// The folder prefix inside your bucket (empty string '' = root)
+const S3_PREFIX   = 'class/';
+// Base URL for downloading files
+const S3_BASE_URL = `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${S3_PREFIX}`;
+// Max users allowed (change to 100, 500, 1000 as needed)
+const USER_LIMIT  = 10;
 
-// ⬇️ CHANGE THIS to your S3 bucket base URL for downloads
-// Example: 'https://my-bucket.s3.ap-south-1.amazonaws.com/class-drive/'
-const S3_BASE_URL = './';
-
-// ══════════════════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════════════════
-const ADMIN_CRED = { username:'admin', password:'admin123', name:'Administrator', role:'admin' };
-
+// ═══════════════════════════════════════════
+// CREDENTIALS
+// ═══════════════════════════════════════════
+const ADMIN = { username:'admin', password:'admin123' };
 let USERS = [
-  { id:'u1', username:'john',  password:'john123', name:'John David',  access:['AWS Class','Docker','AWS-CLI install in ubundu.txt','docker install in ubundu.txt','Kubernetes install in ubundu.txt','Jankins'] },
-  { id:'u2', username:'sara',  password:'sara123', name:'Sara kan',  access:['interview questions','Prometheus + Grafana + Alertmanager.docx','Playwright on AWS.txt','Class links.txt','index.html','Certificate'] },
+  { id:'u1', username:'john', password:'john123', name:'John David', access:[] },
+  { id:'u2', username:'sara', password:'sara123', name:'Sara Priya', access:[] },
 ];
 
-const ALL_ITEMS = [
-  {name:"A+ N+",type:"dir",date:"20-12-2025",size:null,desc:"CompTIA A+ and Network+ study materials, notes, and resources."},
-  {name:"AWS Class",type:"dir",date:"28-02-2026",size:null,desc:"AWS training class materials, slides, and lab files."},
-  {name:"AWS DevOps",type:"dir",date:"08-03-2026",size:null,desc:"AWS DevOps course content, pipelines, and CI/CD resources."},
-  {name:"Azure",type:"dir",date:"04-12-2025",size:null,desc:"Microsoft Azure class materials and notes."},
-  {name:"Blaze",type:"dir",date:"15-01-2026",size:null,desc:"Blaze project or course folder."},
-  {name:"Certificate",type:"dir",date:"21-02-2024",size:null,desc:"Certificates and credential documents."},
-  {name:"Cisco",type:"dir",date:"08-03-2026",size:null,desc:"Cisco networking class resources and labs."},
-  {name:"Docker",type:"dir",date:"19-08-2025",size:null,desc:"Docker training materials, compose files, and configurations."},
-  {name:"interview questions",type:"dir",date:"20-12-2024",size:null,desc:"Interview preparation questions and answers."},
-  {name:"Jankins",type:"dir",date:"30-11-2025",size:null,desc:"Jenkins CI/CD pipeline files and configurations."},
-  {name:"Movie",type:"dir",date:"19-10-2025",size:null,desc:"Movie collection folder."},
-  {name:"sharepoint",type:"dir",date:"07-12-2025",size:null,desc:"SharePoint related files and resources."},
-  {name:"SteamLibrary",type:"dir",date:"10-08-2025",size:null,desc:"Steam game library files."},
-  {name:"111.txt",type:"txt",date:"15-03-2024",size:2901,desc:"General text notes file."},
-  {name:"Aws linux mount volume.txt",type:"txt",date:"08-02-2026",size:729,desc:"Steps for mounting volumes on AWS Linux instances."},
-  {name:"Aws webserver auto instll script.html",type:"html",date:"28-06-2024",size:233,desc:"HTML page for AWS web server auto-install script."},
-  {name:"Aws webserver auto instll script.txt",type:"txt",date:"27-06-2024",size:1881,desc:"Script notes for auto-installing a web server on AWS."},
-  {name:"AWS-CLI install in ubundu.txt",type:"txt",date:"23-09-2025",size:3174,desc:"Step-by-step AWS CLI installation guide for Ubuntu."},
-  {name:"Book1.xlsx",type:"xlsx",date:"04-05-2024",size:11680,desc:"Excel spreadsheet workbook."},
-  {name:"boy ids.txt",type:"txt",date:"29-02-2024",size:1264,desc:"List of student or user IDs."},
-  {name:"Capture.PNG",type:"png",date:"12-05-2025",size:436234,desc:"Screenshot or capture image (426 KB)."},
-  {name:"Class links.txt",type:"txt",date:"02-03-2026",size:1218,desc:"Collection of useful class and resource links."},
-  {name:"DevOps.txt",type:"txt",date:"08-03-2024",size:120,desc:"Short DevOps notes or reference."},
-  {name:"docker install in ubundu.txt",type:"txt",date:"13-02-2024",size:12518,desc:"Detailed Docker installation guide for Ubuntu (12 KB)."},
-  {name:"Elysium Coimbatore.xlsx",type:"xlsx",date:"12-05-2025",size:11789,desc:"Elysium Coimbatore data spreadsheet."},
-  {name:"ERPNext.txt",type:"txt",date:"01-03-2026",size:11758,desc:"ERPNext setup and configuration notes."},
-  {name:"How to Install Kubernetes on Ubuntu.txt",type:"txt",date:"15-10-2023",size:560,desc:"Quick guide for installing Kubernetes on Ubuntu."},
-  {name:"index.html",type:"html",date:"05-03-2026",size:13334,desc:"This file explorer portal — the main page."},
-  {name:"initrd-checks.sh",type:"sh",date:"28-03-2024",size:413,desc:"Shell script for initrd checks."},
-  {name:"Interive linux tips.txt",type:"txt",date:"28-03-2024",size:777,desc:"Interactive Linux command tips and tricks."},
-  {name:"Kubernetes install in ubundu.txt",type:"txt",date:"14-01-2024",size:1166,desc:"Kubernetes installation steps for Ubuntu."},
-  {name:"lamp aws.txt",type:"txt",date:"16-07-2024",size:259,desc:"LAMP stack setup on AWS notes."},
-  {name:"mongod.log",type:"log",date:"04-07-2024",size:170545,desc:"MongoDB daemon log file (166 KB)."},
-  {name:"Playwright on AWS.txt",type:"txt",date:"18-01-2026",size:9259,desc:"Playwright test automation setup on AWS."},
-  {name:"Playwright on Rocky Linux 9.txt",type:"txt",date:"18-01-2026",size:5247,desc:"Playwright installation guide for Rocky Linux 9."},
-  {name:"pre-artifacts.sh",type:"sh",date:"28-03-2024",size:1194,desc:"Shell script for pre-artifact setup tasks."},
-  {name:"Prometheus + Grafana + Alertmanager.docx",type:"docx",date:"02-02-2026",size:30927,desc:"Full monitoring stack guide: Prometheus, Grafana, Alertmanager."},
-  {name:"README.md",type:"md",date:"05-03-2026",size:12,desc:"README file for this drive/project."},
-  {name:"Request Tracker 5 (RT) on Ubuntu.txt",type:"txt",date:"23-06-2024",size:1243,desc:"RT5 ticketing system installation on Ubuntu."},
-  {name:"Sarath Chandran S.zip",type:"zip",date:"21-02-2024",size:30769667,desc:"Large zip archive (~29 MB). Personal backup files."},
-  {name:"VM Ware.txt",type:"txt",date:"19-02-2024",size:3182,desc:"VMware setup and usage notes."},
-  {name:"Website domain name registration.txt",type:"txt",date:"18-01-2024",size:111,desc:"Notes on domain registration and web hosting."},
-  {name:"whm and cloudlinux installation.txt",type:"txt",date:"25-10-2025",size:505,desc:"WHM and CloudLinux installation procedure."},
-];
-
-const ICONS={dir:'📁',txt:'📄',sh:'⚙️',html:'🌐',xlsx:'📊',docx:'📝',zip:'🗜️',png:'🖼️',log:'📋',md:'📑',other:'📎'};
-const TB={dir:'tb-dir',txt:'tb-txt',sh:'tb-sh',html:'tb-html',xlsx:'tb-xlsx',docx:'tb-docx',zip:'tb-zip',png:'tb-png',log:'tb-log',md:'tb-md',other:'tb-other'};
-const gi=t=>ICONS[t]||ICONS.other;
-const gt=t=>TB[t]||TB.other;
-function fmtSize(n){if(!n)return'—';if(n>=1048576)return(n/1048576).toFixed(1)+' MB';if(n>=1024)return(n/1024).toFixed(1)+' KB';return n+' B';}
-
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // STATE
-// ══════════════════════════════════════════════════════
-let currentUser=null,currentView='grid',currentFilter='all',editingUserId=null,tempAccess=[];
+// ═══════════════════════════════════════════
+let currentUser = null;
+let allS3Items  = [];   // all items fetched from S3
+let currentItems = [];  // items shown in current view (after nav into folder)
+let currentPath = S3_PREFIX; // current folder prefix
+let pathStack   = [];   // for back navigation [{label, prefix}]
+let currentView = 'grid';
+let currentFilter = 'all';
+let editingUID  = null;
+let tempAccess  = [];
+let loginMode   = 'admin';
 
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// TYPE HELPERS
+// ═══════════════════════════════════════════
+const EXT_ICON = {
+  dir:'📁', txt:'📄', sh:'⚙️', bash:'⚙️', html:'🌐', htm:'🌐',
+  xlsx:'📊', xls:'📊', csv:'📊', docx:'📝', doc:'📝',
+  zip:'🗜️', tar:'🗜️', gz:'🗜️', rar:'🗜️',
+  png:'🖼️', jpg:'🖼️', jpeg:'🖼️', gif:'🖼️', svg:'🖼️', webp:'🖼️',
+  pdf:'📕', log:'📋', md:'📑', yml:'⚙️', yaml:'⚙️', json:'{}',
+  py:'🐍', js:'🟨', ts:'🔷', css:'🎨', sh:'⚙️',
+};
+const EXT_TB = {
+  dir:'tb-dir', txt:'tb-txt', sh:'tb-sh', bash:'tb-sh', html:'tb-html', htm:'tb-html',
+  xlsx:'tb-xlsx', xls:'tb-xlsx', csv:'tb-xlsx', docx:'tb-docx', doc:'tb-docx',
+  zip:'tb-zip', tar:'tb-zip', gz:'tb-zip', rar:'tb-zip',
+  png:'tb-png', jpg:'tb-jpg', jpeg:'tb-jpg', gif:'tb-jpg', svg:'tb-png', webp:'tb-jpg',
+  pdf:'tb-pdf', log:'tb-log', md:'tb-md', yml:'tb-yml', yaml:'tb-yml',
+};
+function getExt(name){ return name.includes('.') ? name.split('.').pop().toLowerCase() : 'other'; }
+function getIcon(item){ return item.type==='dir' ? '📁' : (EXT_ICON[getExt(item.name)]||'📎'); }
+function getTB(item){ return item.type==='dir' ? 'tb-dir' : (EXT_TB[getExt(item.name)]||'tb-other'); }
+function fmtSize(n){
+  if(!n||n===0) return '—';
+  if(n>=1073741824) return (n/1073741824).toFixed(1)+' GB';
+  if(n>=1048576) return (n/1048576).toFixed(1)+' MB';
+  if(n>=1024) return (n/1024).toFixed(1)+' KB';
+  return n+' B';
+}
+function fmtDate(s){ if(!s) return '—'; const d=new Date(s); return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+const PREVIEWABLE = ['txt','sh','bash','md','log','yml','yaml','json','py','js','ts','css','html','htm','csv'];
+
+// ═══════════════════════════════════════════
 // LOGIN
-// ══════════════════════════════════════════════════════
-let loginMode='admin';
-function switchLoginTab(m){
+// ═══════════════════════════════════════════
+function switchTab(m){
   loginMode=m;
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(m==='admin'?0:1)===i));
-  document.getElementById('loginUser').value='';
-  document.getElementById('loginPass').value='';
-  document.getElementById('loginError').style.display='none';
+  document.getElementById('lUser').value='';
+  document.getElementById('lPass').value='';
+  document.getElementById('loginErr').style.display='none';
 }
 function doLogin(){
-  const u=document.getElementById('loginUser').value.trim();
-  const p=document.getElementById('loginPass').value.trim();
-  const err=document.getElementById('loginError');
-  if(loginMode==='admin'){
-    if(u===ADMIN_CRED.username&&p===ADMIN_CRED.password){currentUser={username:'admin',name:'Administrator',role:'admin',access:'all'};launchApp();return;}
-  } else {
-    const usr=USERS.find(x=>x.username===u&&x.password===p);
-    if(usr){currentUser={username:usr.username,name:usr.name,role:'user',access:usr.access};launchApp();return;}
+  const u=document.getElementById('lUser').value.trim();
+  const p=document.getElementById('lPass').value.trim();
+  if(loginMode==='admin' && u===ADMIN.username && p===ADMIN.password){
+    currentUser={username:'admin',name:'Administrator',role:'admin'};
+    launchApp(); return;
   }
-  err.style.display='block';
+  if(loginMode==='user'){
+    const usr=USERS.find(x=>x.username===u&&x.password===p);
+    if(usr){ currentUser={username:usr.username,name:usr.name,role:'user',id:usr.id}; launchApp(); return; }
+  }
+  document.getElementById('loginErr').style.display='block';
 }
 function doLogout(){
-  currentUser=null;
+  currentUser=null; allS3Items=[]; currentItems=[]; currentPath=S3_PREFIX; pathStack=[];
   document.getElementById('appScreen').style.display='none';
   document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('loginUser').value='';
-  document.getElementById('loginPass').value='';
-  document.getElementById('loginError').style.display='none';
+  document.getElementById('lUser').value='';
+  document.getElementById('lPass').value='';
+  document.getElementById('loginErr').style.display='none';
 }
 
-// ══════════════════════════════════════════════════════
-// LAUNCH
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// LAUNCH APP
+// ═══════════════════════════════════════════
 function launchApp(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('appScreen').style.display='block';
-  const av=document.getElementById('navAvatar');
+  const av=document.getElementById('navAv');
   av.textContent=currentUser.name[0].toUpperCase();
-  av.className='user-avatar '+(currentUser.role==='admin'?'avatar-admin':'avatar-user');
-  document.getElementById('navName').textContent=currentUser.name;
-  const roleEl=document.getElementById('navRole');
-  roleEl.textContent=currentUser.role==='admin'?'Admin':'User';
-  roleEl.className='user-role '+(currentUser.role==='admin'?'role-admin':'role-user');
-
+  av.className='u-av '+(currentUser.role==='admin'?'av-admin':'av-user');
+  document.getElementById('navNm').textContent=currentUser.name;
+  const rl=document.getElementById('navRl');
+  rl.textContent=currentUser.role==='admin'?'Admin':'User';
+  rl.className='u-role '+(currentUser.role==='admin'?'r-admin':'r-user');
   if(currentUser.role==='admin'){
-    document.getElementById('heroBannerTitle').innerHTML='DevOps & Cloud<br>Resource Center';
-    document.getElementById('heroBannerDesc').textContent='Full admin access — manage users, assign permissions, and browse all resources.';
-    document.getElementById('heroStatFiles').textContent=ALL_ITEMS.length;
-    document.getElementById('heroStatFolders').textContent=ALL_ITEMS.filter(x=>x.type==='dir').length;
-    document.getElementById('explorerTitle').textContent='📂 All Files & Folders';
-    document.getElementById('explorerSub').textContent=ALL_ITEMS.length+' items on E:\\ Class Drive';
+    document.getElementById('heroH').innerHTML='DevOps & Cloud<br>Resource Center';
+    document.getElementById('heroD').textContent='Admin access — all files load live from S3.';
     document.getElementById('adminPanel').style.display='block';
     renderAdminPanel();
   } else {
-    const acc=currentUser.access;
-    document.getElementById('heroBannerTitle').innerHTML='Welcome,<br>'+currentUser.name;
-    document.getElementById('heroBannerDesc').textContent='You have access to '+acc.length+' file'+(acc.length!==1?'s':'')+' and folders assigned by admin.';
-    document.getElementById('heroStatFiles').textContent=acc.length;
-    document.getElementById('heroStatFolders').textContent=acc.filter(n=>ALL_ITEMS.find(x=>x.name===n&&x.type==='dir')).length;
-    document.getElementById('explorerTitle').textContent='📂 My Accessible Files';
-    document.getElementById('explorerSub').textContent=acc.length+' items assigned to you';
+    document.getElementById('heroH').innerHTML='Welcome,<br>'+currentUser.name;
+    document.getElementById('heroD').textContent='Your assigned files from the S3 portal.';
     document.getElementById('adminPanel').style.display='none';
   }
-  renderStats();renderExplorer();
+  startClock();
+  loadS3Files();
 }
 
-// ══════════════════════════════════════════════════════
-// STATS ROW
-// ══════════════════════════════════════════════════════
-function renderStats(){
-  const items=getVisibleItems();
-  const types=[
-    {icon:'📁',label:'Folders',color:'#fef3c7',count:items.filter(x=>x.type==='dir').length},
-    {icon:'📄',label:'Text Files',color:'#dbeafe',count:items.filter(x=>x.type==='txt').length},
-    {icon:'⚙️',label:'Scripts',color:'#d1fae5',count:items.filter(x=>x.type==='sh').length},
-    {icon:'📊',label:'Spreadsheets',color:'#dcfce7',count:items.filter(x=>x.type==='xlsx').length},
-    {icon:'📝',label:'Documents',color:'#ede9fe',count:items.filter(x=>x.type==='docx').length},
-    {icon:'🌐',label:'Web & Docs',color:'#fee2e2',count:items.filter(x=>['html','md'].includes(x.type)).length},
-  ];
-  document.getElementById('statsRow').innerHTML=types.map(t=>`<div class="stat-card"><div class="stat-icon" style="background:${t.color}">${t.icon}</div><div><div class="stat-info-num">${t.count}</div><div class="stat-info-label">${t.label}</div></div></div>`).join('');
-}
-
-// ══════════════════════════════════════════════════════
-// ADMIN PANEL
-// ══════════════════════════════════════════════════════
-function renderAdminPanel(){
-  document.getElementById('limitBadge').innerHTML='Users: <strong>'+USERS.length+' / '+USER_LIMIT+'</strong>';
-  const rows=USERS.map(u=>`<tr>
-    <td><div class="td-user"><div class="td-avatar">${u.name[0]}</div><div><div class="td-name">${u.name}</div><div class="td-uname">@${u.username}</div></div></div></td>
-    <td><span class="access-count">🗂️ ${u.access.length} items</span></td>
-    <td>${u.access.slice(0,2).map(a=>`<span style="font-size:11px;background:#f0f9ff;border:1px solid #bae6fd;color:#0c4a6e;padding:2px 7px;border-radius:10px;margin-right:4px;display:inline-block;margin-bottom:3px">${a.length>18?a.slice(0,18)+'…':a}</span>`).join('')}${u.access.length>2?`<span style="font-size:11px;color:var(--muted)">+${u.access.length-2} more</span>`:''}</td>
-    <td><div style="display:flex;gap:6px"><button class="btn-sm btn-primary-sm" onclick="openAccess('${u.id}')">🔑 Access</button><button class="btn-sm btn-danger-sm" onclick="deleteUser('${u.id}')">🗑️ Delete</button></div></td>
-  </tr>`).join('');
-  document.getElementById('userTable').innerHTML=`<thead><tr><th>User</th><th>Access</th><th>Assigned Items</th><th>Actions</th></tr></thead><tbody>${rows||'<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--muted)">No users yet. Click Add User.</td></tr>'}</tbody>`;
-}
-
-function openAddUser(){
-  if(USERS.length>=USER_LIMIT){showToast('User limit reached ('+USER_LIMIT+'). Change USER_LIMIT in code to add more.','error');return;}
-  document.getElementById('newFullName').value='';
-  document.getElementById('newUsername').value='';
-  document.getElementById('newPassword').value='';
-  document.getElementById('addUserError').style.display='none';
-  openModal('addUserModal');
-}
-
-function saveNewUser(){
-  const name=document.getElementById('newFullName').value.trim();
-  const uname=document.getElementById('newUsername').value.trim().toLowerCase();
-  const pass=document.getElementById('newPassword').value.trim();
-  const errEl=document.getElementById('addUserError');
-  if(!name||!uname||!pass){errEl.textContent='Please fill all fields.';errEl.style.display='block';return;}
-  if(USERS.find(x=>x.username===uname)||uname==='admin'){errEl.textContent='Username already exists.';errEl.style.display='block';return;}
-  USERS.push({id:'u'+Date.now(),username:uname,password:pass,name,access:[]});
-  closeModal('addUserModal');renderAdminPanel();showToast('✅ User "'+name+'" created!','success');
-}
-
-function deleteUser(id){
-  if(!confirm('Delete this user?'))return;
-  USERS=USERS.filter(x=>x.id!==id);
-  renderAdminPanel();showToast('User deleted.','');
-}
-
-// ══════════════════════════════════════════════════════
-// ACCESS CONTROL
-// ══════════════════════════════════════════════════════
-function openAccess(uid){
-  const user=USERS.find(x=>x.id===uid);
-  editingUserId=uid;tempAccess=[...user.access];
-  document.getElementById('accessModalTitle').textContent='🔑 Access for '+user.name+' (@'+user.username+')';
-  const folders=ALL_ITEMS.filter(x=>x.type==='dir');
-  const files=ALL_ITEMS.filter(x=>x.type!=='dir');
-  function mkCb(item){
-    const chk=tempAccess.includes(item.name)?'checked':'';
-    const id='cb_'+item.name.replace(/\W/g,'_');
-    return`<label class="checkbox-item ${chk?'checked':''}" id="${id}"><input type="checkbox" ${chk} onchange="toggleAccess('${item.name.replace(/'/g,"\\'")}',this)" value="${item.name}"><span class="cb-icon">${gi(item.type)}</span><span class="cb-name" title="${item.name}">${item.name}</span></label>`;
+// ═══════════════════════════════════════════
+// S3 LIVE FETCH
+// ═══════════════════════════════════════════
+async function loadS3Files(){
+  setS3Status('loading','Fetching files from S3…');
+  showSkeleton();
+  try {
+    // Use S3 list-objects-v2 XML API — works with public buckets
+    // Lists ALL objects under the prefix (recursively for folder detection)
+    const url = `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/?list-type=2&prefix=${encodeURIComponent(S3_PREFIX)}&max-keys=1000`;
+    const res  = await fetch(url);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const xml  = await res.text();
+    allS3Items = parseS3XML(xml);
+    currentPath = S3_PREFIX;
+    pathStack   = [];
+    setS3Status('success','✅ Connected — '+allS3Items.length+' items loaded from S3');
+    renderFromPath();
+  } catch(e) {
+    setS3Status('error','⚠️ Could not load S3 files. Make sure bucket is public or CORS is enabled. Error: '+e.message);
+    document.getElementById('explorerCont').innerHTML=`<div class="empty-state"><div class="empty-ico">☁️</div><p>Could not connect to S3.<br><small style="font-size:11px">Check bucket permissions and CORS settings below.</small></p><div style="background:var(--warning-bg);border:1px solid #fde68a;border-radius:8px;padding:12px;margin-top:14px;font-size:11.5px;color:#78350f;text-align:left;max-width:500px;margin-left:auto;margin-right:auto"><strong>Fix Steps:</strong><br>1. S3 → Bucket → Permissions → Block Public Access → Turn OFF<br>2. Bucket Policy → allow s3:GetObject and s3:ListBucket<br>3. CORS → add AllowedOrigins: * and AllowedMethods: GET, HEAD</div></div>`;
   }
-  document.getElementById('accessModalContent').innerHTML=`
-    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      <button class="btn-sm btn-success-sm" onclick="selectAllAccess()">✅ Select All</button>
-      <button class="btn-sm btn-danger-sm" onclick="clearAllAccess()">❌ Clear All</button>
-      <span style="font-size:12px;color:var(--muted);align-self:center" id="accessCountLabel">${tempAccess.length} items selected</span>
-    </div>
-    <div class="access-section-title">📁 Folders (${folders.length})</div>
-    <div class="checkbox-grid">${folders.map(mkCb).join('')}</div>
-    <div class="access-section-title">📄 Files (${files.length})</div>
-    <div class="checkbox-grid">${files.map(mkCb).join('')}</div>`;
-  openModal('accessModal');
 }
 
-function toggleAccess(name,el){
-  const lbl=el.closest('.checkbox-item');
-  if(el.checked){if(!tempAccess.includes(name))tempAccess.push(name);lbl.classList.add('checked');}
-  else{tempAccess=tempAccess.filter(x=>x!==name);lbl.classList.remove('checked');}
-  document.getElementById('accessCountLabel').textContent=tempAccess.length+' items selected';
-}
-function selectAllAccess(){tempAccess=ALL_ITEMS.map(x=>x.name);document.querySelectorAll('#accessModalContent .checkbox-item input').forEach(cb=>{cb.checked=true;cb.closest('.checkbox-item').classList.add('checked');});document.getElementById('accessCountLabel').textContent=tempAccess.length+' items selected';}
-function clearAllAccess(){tempAccess=[];document.querySelectorAll('#accessModalContent .checkbox-item input').forEach(cb=>{cb.checked=false;cb.closest('.checkbox-item').classList.remove('checked');});document.getElementById('accessCountLabel').textContent='0 items selected';}
-function saveAccess(){const user=USERS.find(x=>x.id===editingUserId);user.access=[...tempAccess];closeModal('accessModal');renderAdminPanel();showToast('✅ Access updated for '+user.name+'!','success');}
+function parseS3XML(xml){
+  const parser = new DOMParser();
+  const doc    = parser.parseFromString(xml, 'application/xml');
+  const items  = [];
+  const seenDirs = new Set();
 
-// ══════════════════════════════════════════════════════
-// EXPLORER
-// ══════════════════════════════════════════════════════
-function getVisibleItems(){return currentUser.role==='admin'?ALL_ITEMS:ALL_ITEMS.filter(x=>currentUser.access.includes(x.name));}
-function getFilteredItems(){
-  let items=getVisibleItems();
-  const q=document.getElementById('searchBox').value.trim().toLowerCase();
-  if(q)items=items.filter(x=>x.name.toLowerCase().includes(q)||x.desc.toLowerCase().includes(q));
-  if(currentFilter==='dir')items=items.filter(x=>x.type==='dir');
-  else if(currentFilter==='txt')items=items.filter(x=>x.type==='txt');
-  else if(currentFilter==='script')items=items.filter(x=>x.type==='sh');
-  else if(currentFilter==='web')items=items.filter(x=>['html','md'].includes(x.type));
-  else if(currentFilter==='office')items=items.filter(x=>['xlsx','docx'].includes(x.type));
+  // Parse files (Contents)
+  doc.querySelectorAll('Contents').forEach(c => {
+    const key  = c.querySelector('Key')?.textContent || '';
+    const size = parseInt(c.querySelector('Size')?.textContent || '0');
+    const date = c.querySelector('LastModified')?.textContent || '';
+    // Strip the prefix to get relative path
+    const rel  = key.replace(S3_PREFIX, '');
+    if(!rel || rel.endsWith('/')) return; // skip empty or folder markers
+    const parts = rel.split('/');
+    if(parts.length === 1){
+      // File in root of our prefix
+      items.push({ name:parts[0], type:'file', ext:getExt(parts[0]), fullKey:key, size, date, path:S3_PREFIX });
+    } else {
+      // File is inside a subfolder — add the folder
+      const folderName = parts[0];
+      const folderKey  = S3_PREFIX + folderName + '/';
+      if(!seenDirs.has(folderKey)){
+        seenDirs.add(folderKey);
+        items.push({ name:folderName, type:'dir', fullKey:folderKey, size:0, date, path:S3_PREFIX });
+      }
+    }
+  });
+
+  // Also parse explicit CommonPrefixes if delimiter was used
+  doc.querySelectorAll('CommonPrefixes Prefix').forEach(p => {
+    const key  = p.textContent;
+    const rel  = key.replace(S3_PREFIX,'').replace('/','');
+    if(rel && !seenDirs.has(key)){
+      seenDirs.add(key);
+      items.push({ name:rel, type:'dir', fullKey:key, size:0, date:'', path:S3_PREFIX });
+    }
+  });
+
+  // Sort: folders first, then files alphabetically
+  items.sort((a,b)=>{
+    if(a.type==='dir' && b.type!=='dir') return -1;
+    if(a.type!=='dir' && b.type==='dir') return 1;
+    return a.name.localeCompare(b.name);
+  });
   return items;
 }
-function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.filter-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderExplorer();}
-function setView(v){currentView=v;document.getElementById('vtnGrid').classList.toggle('active',v==='grid');document.getElementById('vtnList').classList.toggle('active',v==='list');renderExplorer();}
 
+// Get files inside a specific folder path from allS3Items
+function getFilesInFolder(folderPrefix){
+  // We need to re-fetch for subfolder, or derive from allS3Items
+  // Since we fetched all keys recursively, derive from allS3Items
+  const items = [];
+  const seenDirs = new Set();
+  // folderPrefix is like 'class/AWS Class/'
+  allS3Items.forEach(item => {
+    if(item.type === 'file'){
+      const rel = item.fullKey.replace(folderPrefix,'');
+      if(rel && !rel.startsWith('../') && item.fullKey.startsWith(folderPrefix)){
+        const parts = rel.split('/');
+        if(parts.length === 1){
+          items.push({...item, path: folderPrefix});
+        } else {
+          const sub = parts[0];
+          const subKey = folderPrefix + sub + '/';
+          if(!seenDirs.has(subKey)){
+            seenDirs.add(subKey);
+            items.push({ name:sub, type:'dir', fullKey:subKey, size:0, date:item.date, path:folderPrefix });
+          }
+        }
+      }
+    }
+  });
+  items.sort((a,b)=>{
+    if(a.type==='dir'&&b.type!=='dir') return -1;
+    if(a.type!=='dir'&&b.type==='dir') return 1;
+    return a.name.localeCompare(b.name);
+  });
+  return items;
+}
+
+function renderFromPath(){
+  let items;
+  if(currentPath === S3_PREFIX){
+    // Root level — show top-level items
+    items = allS3Items;
+  } else {
+    items = getFilesInFolder(currentPath);
+  }
+
+  // For users: filter by access list
+  if(currentUser.role === 'user'){
+    const usr = USERS.find(x=>x.id===currentUser.id);
+    const acc = usr ? usr.access : [];
+    if(acc.length > 0){
+      items = items.filter(x => acc.includes(x.name) || acc.includes(x.fullKey));
+    } else {
+      items = [];
+    }
+  }
+
+  currentItems = items;
+  updateHeroStats(items);
+  renderStats(items);
+  renderBreadcrumb();
+  renderExplorer();
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATE INTO FOLDER
+// ═══════════════════════════════════════════
+function openFolder(item){
+  pathStack.push({ label: item.name, prefix: currentPath });
+  currentPath = item.fullKey;
+  currentFilter = 'all';
+  document.querySelectorAll('.ftab').forEach((b,i)=>b.classList.toggle('active',i===0));
+  renderFromPath();
+}
+
+function navToIndex(idx){
+  // Navigate back to a specific breadcrumb index
+  if(idx < 0){
+    // Home
+    currentPath = S3_PREFIX;
+    pathStack = [];
+  } else {
+    currentPath = pathStack[idx].prefix;
+    // Navigate into that prefix's folder name
+    if(idx < pathStack.length - 1){
+      const dest = pathStack[idx+1];
+      currentPath = dest.prefix + (pathStack[idx+1]?.label ? pathStack[idx+1].label+'/' : '');
+    }
+    // Actually just go home and re-enter
+    const stack = pathStack.slice(0, idx+1);
+    currentPath = stack.length > 0 ? stack[stack.length-1].prefix : S3_PREFIX;
+    // Re-navigate forward through the stack
+    for(let i=idx+1; i<pathStack.length; i++){
+      // skip — we're truncating
+    }
+    pathStack = stack;
+  }
+  currentFilter = 'all';
+  document.querySelectorAll('.ftab').forEach((b,i)=>b.classList.toggle('active',i===0));
+  renderFromPath();
+}
+
+function goHome(){
+  currentPath = S3_PREFIX;
+  pathStack = [];
+  currentFilter = 'all';
+  document.querySelectorAll('.ftab').forEach((b,i)=>b.classList.toggle('active',i===0));
+  renderFromPath();
+}
+
+function renderBreadcrumb(){
+  const bar = document.getElementById('breadcrumbBar');
+  if(pathStack.length === 0){ bar.style.display='none'; return; }
+  bar.style.display='flex';
+  let html = `<span class="bc" onclick="goHome()">🏠 Home</span>`;
+  pathStack.forEach((p,i)=>{
+    html += `<span class="bc-sep">›</span><span class="bc" onclick="navToIndex(${i})">${p.label||'Root'}</span>`;
+  });
+  // Current folder name
+  const curName = currentPath.replace(S3_PREFIX,'').replace(/\/$/,'').split('/').pop();
+  if(curName) html += `<span class="bc-sep">›</span><span class="bc-cur">📁 ${curName}</span>`;
+  bar.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════
+function updateHeroStats(items){
+  const files   = items.filter(x=>x.type!=='dir').length;
+  const folders = items.filter(x=>x.type==='dir').length;
+  document.getElementById('hsFiles').textContent   = files;
+  document.getElementById('hsFolders').textContent = folders;
+  document.getElementById('hsTotal').textContent   = items.length;
+  document.getElementById('expTitle').textContent  = currentPath===S3_PREFIX ? '📂 Files & Folders' : '📂 '+currentPath.replace(S3_PREFIX,'').replace(/\/$/,'');
+  document.getElementById('expSub').textContent    = items.length+' item'+(items.length!==1?'s':'')+' in S3';
+}
+
+function renderStats(items){
+  const types=[
+    {ico:'📁',lbl:'Folders',  col:'#fef3c7', n:items.filter(x=>x.type==='dir').length},
+    {ico:'📄',lbl:'Text',     col:'#dbeafe', n:items.filter(x=>x.type!=='dir'&&['txt','log','md','csv'].includes(getExt(x.name))).length},
+    {ico:'⚙️',lbl:'Scripts',  col:'#d1fae5', n:items.filter(x=>['sh','bash','yml','yaml','py','js'].includes(getExt(x.name))).length},
+    {ico:'📊',lbl:'Sheets',   col:'#dcfce7', n:items.filter(x=>['xlsx','xls','csv'].includes(getExt(x.name))).length},
+    {ico:'📝',lbl:'Docs',     col:'#ede9fe', n:items.filter(x=>['docx','doc','pdf'].includes(getExt(x.name))).length},
+    {ico:'🖼️',lbl:'Media',    col:'#fae8ff', n:items.filter(x=>['png','jpg','jpeg','gif','svg','webp','mp4','mp3'].includes(getExt(x.name))).length},
+  ];
+  document.getElementById('statsRow').innerHTML=types.map(t=>`
+    <div class="stat-card"><div class="stat-ic" style="background:${t.col}">${t.ico}</div>
+    <div><div class="stat-n">${t.n}</div><div class="stat-lb">${t.lbl}</div></div></div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// FILTER & VIEW
+// ═══════════════════════════════════════════
+function setFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderExplorer();
+}
+function setView(v){
+  currentView=v;
+  document.getElementById('vbGrid').classList.toggle('active',v==='grid');
+  document.getElementById('vbList').classList.toggle('active',v==='list');
+  renderExplorer();
+}
+function getFiltered(){
+  let items=[...currentItems];
+  const q=document.getElementById('searchBox').value.trim().toLowerCase();
+  if(q) items=items.filter(x=>x.name.toLowerCase().includes(q));
+  if(currentFilter==='dir')    items=items.filter(x=>x.type==='dir');
+  else if(currentFilter==='txt')    items=items.filter(x=>['txt','log','md','csv'].includes(getExt(x.name)));
+  else if(currentFilter==='script') items=items.filter(x=>['sh','bash','yml','yaml','py','js','ts'].includes(getExt(x.name)));
+  else if(currentFilter==='web')    items=items.filter(x=>['html','htm','md'].includes(getExt(x.name)));
+  else if(currentFilter==='office') items=items.filter(x=>['xlsx','xls','docx','doc','pdf','csv'].includes(getExt(x.name)));
+  else if(currentFilter==='media')  items=items.filter(x=>['png','jpg','jpeg','gif','svg','webp','mp4','mp3'].includes(getExt(x.name)));
+  return items;
+}
+
+// ═══════════════════════════════════════════
+// RENDER EXPLORER
+// ═══════════════════════════════════════════
 function renderExplorer(){
-  const items=getFilteredItems();
-  const c=document.getElementById('explorerContainer');
-  if(!items.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">No files match your search or filter.</div></div>';return;}
+  const items=getFiltered();
+  const c=document.getElementById('explorerCont');
+  if(!items.length){
+    c.innerHTML='<div class="empty-state"><div class="empty-ico">🔍</div><p>No items match.</p></div>';
+    return;
+  }
   if(currentView==='grid'){
     c.className='file-grid';
     c.innerHTML=items.map((item,i)=>{
-      const n=item.name.replace(/'/g,"\\'");
+      const n=esc(item.name);
       const isDir=item.type==='dir';
-      return`<div class="file-card" style="animation:fadeUp 0.4s ${Math.min(i*.02,.5)}s ease both">
-        <span class="file-type-badge ${gt(item.type)}">${isDir?'DIR':item.type.toUpperCase()}</span>
-        <span class="file-card-icon">${gi(item.type)}</span>
-        <div class="file-card-name">${item.name}</div>
-        <div class="file-card-meta">${item.date}${item.size?'<br>'+fmtSize(item.size):''}</div>
-        <div class="card-actions-3">
-          <button class="card-btn card-btn-open" onclick="handleOpen('${n}')" title="${isDir?'Open Folder':'Open File'}">📂 Open</button>
-          ${isDir?
-            `<button class="card-btn card-btn-view" onclick="openFileDetail('${n}')" title="Info" style="grid-column:span 2">ℹ️ Info</button>`:
-            `<button class="card-btn card-btn-dl" onclick="doDownload('${n}')" title="Save/Download">⬇ Save</button>
-             <button class="card-btn card-btn-view" onclick="openFileDetail('${n}')" title="Info">ℹ️ Info</button>`}
+      const ext=isDir?'DIR':getExt(item.name).toUpperCase();
+      return`<div class="fcard" style="animation:fadeUp .35s ${Math.min(i*.025,.4)}s ease both">
+        <span class="ftbadge ${getTB(item)}">${ext}</span>
+        <span class="fc-icon">${getIcon(item)}</span>
+        <div class="fc-name">${item.name}</div>
+        <div class="fc-meta">${fmtDate(item.date)}${item.size?'<br>'+fmtSize(item.size):''}</div>
+        <div class="card-btns ${isDir?'card-btns-2':'card-btns-3'}">
+          <button class="cbtn cb-open" onclick="handleOpen(${i})">📂 Open</button>
+          ${isDir?'':`<button class="cbtn cb-save" onclick="handleSave(${i})">⬇ Save</button>`}
+          <button class="cbtn cb-info" onclick="handleInfo(${i})">ℹ️ Info</button>
         </div>
       </div>`;
     }).join('');
   } else {
-    c.className='file-list';
-    c.innerHTML=`<div class="list-header-row"><div></div><div>Name</div><div>Type</div><div>Date</div><div>Size</div><div>Actions</div></div>`+
-    items.map(item=>{
-      const n=item.name.replace(/'/g,"\\'");
+    c.className='';
+    c.innerHTML=`<div class="lhdr"><div></div><div>Name</div><div>Type</div><div>Date</div><div>Size</div><div>Actions</div></div>`+
+    items.map((item,i)=>{
       const isDir=item.type==='dir';
-      return`<div class="list-row">
-        <div class="list-icon">${gi(item.type)}</div>
-        <div class="list-name-col" title="${item.name}">${item.name}</div>
-        <div><span class="file-type-badge ${gt(item.type)}" style="position:static">${isDir?'DIR':item.type.toUpperCase()}</span></div>
-        <div class="list-date">${item.date}</div>
-        <div class="list-size">${fmtSize(item.size)}</div>
-        <div class="list-actions">
-          <button class="btn-sm btn-primary-sm" onclick="handleOpen('${n}')" title="Open">📂</button>
-          ${!isDir?`<button class="btn-sm btn-success-sm" onclick="doDownload('${n}')" title="Save">⬇</button>`:''}
-          <button class="btn-sm" style="background:#fff7ed;color:#c2410c;border-color:#fed7aa" onclick="openFileDetail('${n}')" title="Info">ℹ️</button>
+      return`<div class="lrow">
+        <div class="lico">${getIcon(item)}</div>
+        <div class="lnm" title="${item.name}">${item.name}</div>
+        <div><span class="ftbadge ${getTB(item)}" style="position:static">${isDir?'DIR':getExt(item.name).toUpperCase()}</span></div>
+        <div class="ldt">${fmtDate(item.date)}</div>
+        <div class="lsz">${fmtSize(item.size)}</div>
+        <div class="lact">
+          <button class="btn-sm cb-open" onclick="handleOpen(${i})" title="Open">📂</button>
+          ${isDir?'':`<button class="btn-sm bs" onclick="handleSave(${i})" title="Save">⬇</button>`}
+          <button class="btn-sm bp" onclick="handleInfo(${i})" title="Info">ℹ️</button>
         </div>
       </div>`;
     }).join('');
   }
 }
 
-// ══════════════════════════════════════════════════════
-// FOLDER & FILE CONTENTS DATA
-// Add files inside folders here — name must match folder name exactly
-// ══════════════════════════════════════════════════════
-const FOLDER_CONTENTS = {
-  'AWS Class':          [{name:'EC2-setup-guide.txt',type:'txt',size:2048,date:'10-01-2026',desc:'EC2 instance setup guide.'},{name:'S3-basics.txt',type:'txt',size:1500,date:'15-01-2026',desc:'S3 bucket creation and policy notes.'},{name:'IAM-roles.txt',type:'txt',size:980,date:'20-01-2026',desc:'IAM roles and permissions notes.'},{name:'VPC-setup.txt',type:'txt',size:1200,date:'22-01-2026',desc:'VPC and subnet configuration.'},{name:'CloudWatch.txt',type:'txt',size:870,date:'25-01-2026',desc:'CloudWatch monitoring setup.'}],
-  'AWS DevOps':         [{name:'CodePipeline.txt',type:'txt',size:3200,date:'01-03-2026',desc:'AWS CodePipeline CI/CD setup.'},{name:'CodeBuild-config.txt',type:'txt',size:1800,date:'02-03-2026',desc:'CodeBuild project configuration.'},{name:'CodeDeploy.txt',type:'txt',size:2100,date:'03-03-2026',desc:'CodeDeploy deployment groups.'},{name:'Terraform-basics.txt',type:'txt',size:4500,date:'05-03-2026',desc:'Terraform IaC intro notes.'}],
-  'Docker':             [{name:'docker-compose.yml',type:'sh',size:890,date:'10-08-2025',desc:'Sample docker-compose file.'},{name:'Dockerfile-nodejs.txt',type:'txt',size:450,date:'12-08-2025',desc:'Node.js Dockerfile template.'},{name:'Docker-commands.txt',type:'txt',size:2300,date:'15-08-2025',desc:'Essential Docker commands reference.'},{name:'Docker-networking.txt',type:'txt',size:1100,date:'18-08-2025',desc:'Docker networking modes explained.'}],
-  'Azure':              [{name:'Azure-VM-setup.txt',type:'txt',size:1900,date:'01-12-2025',desc:'Azure Virtual Machine creation steps.'},{name:'Azure-Storage.txt',type:'txt',size:1300,date:'03-12-2025',desc:'Azure Blob Storage guide.'},{name:'AzureAD-setup.txt',type:'txt',size:2200,date:'04-12-2025',desc:'Azure Active Directory configuration.'}],
-  'Cisco':              [{name:'CCNA-notes.txt',type:'txt',size:5600,date:'01-03-2026',desc:'CCNA exam preparation notes.'},{name:'Routing-protocols.txt',type:'txt',size:3400,date:'03-03-2026',desc:'OSPF, EIGRP, BGP overview.'},{name:'Switch-config.txt',type:'txt',size:2100,date:'05-03-2026',desc:'Cisco switch configuration commands.'},{name:'Network-topology.txt',type:'txt',size:1800,date:'07-03-2026',desc:'Network topology design notes.'}],
-  'Jankins':            [{name:'Jenkinsfile',type:'sh',size:1200,date:'20-11-2025',desc:'Sample Jenkinsfile pipeline.'},{name:'Jenkins-install.txt',type:'txt',size:2800,date:'22-11-2025',desc:'Jenkins installation on Ubuntu.'},{name:'Pipeline-stages.txt',type:'txt',size:1500,date:'25-11-2025',desc:'Jenkins pipeline stages explained.'},{name:'Jenkins-plugins.txt',type:'txt',size:900,date:'28-11-2025',desc:'Essential Jenkins plugins list.'}],
-  'interview questions': [{name:'Linux-Interview-Q.txt',type:'txt',size:8900,date:'10-12-2024',desc:'Linux interview questions and answers.'},{name:'AWS-Interview-Q.txt',type:'txt',size:7800,date:'12-12-2024',desc:'AWS interview Q&A.'},{name:'DevOps-Interview-Q.txt',type:'txt',size:9200,date:'15-12-2024',desc:'DevOps interview questions.'},{name:'Docker-K8s-Q.txt',type:'txt',size:6500,date:'18-12-2024',desc:'Docker and Kubernetes interview Q&A.'}],
-  'Certificate':        [{name:'AWS-Certificate.pdf',type:'docx',size:220000,date:'10-02-2024',desc:'AWS Cloud Practitioner certificate.'},{name:'Linux-Certificate.pdf',type:'docx',size:180000,date:'15-02-2024',desc:'Linux administration certificate.'}],
-  'Azure':              [{name:'Azure-VM-setup.txt',type:'txt',size:1900,date:'01-12-2025',desc:'Azure VM creation steps.'},{name:'Azure-CLI-guide.txt',type:'txt',size:2100,date:'03-12-2025',desc:'Azure CLI commands reference.'}],
-  'A+ N+':              [{name:'CompTIA-A-Notes.txt',type:'txt',size:12000,date:'01-12-2025',desc:'CompTIA A+ study notes.'},{name:'Network-Plus-Notes.txt',type:'txt',size:10500,date:'05-12-2025',desc:'Network+ certification notes.'},{name:'Practice-Questions.txt',type:'txt',size:8000,date:'10-12-2025',desc:'A+ and N+ practice questions.'}],
-  'Blaze':              [{name:'Blaze-intro.txt',type:'txt',size:1200,date:'10-01-2026',desc:'Blaze project introduction.'}],
-  'Movie':              [{name:'movie-list.txt',type:'txt',size:500,date:'15-10-2025',desc:'Movie collection list.'}],
-  'sharepoint':         [{name:'SharePoint-setup.txt',type:'txt',size:3200,date:'01-12-2025',desc:'SharePoint site setup guide.'},{name:'SP-permissions.txt',type:'txt',size:1800,date:'05-12-2025',desc:'SharePoint permissions management.'}],
-  'SteamLibrary':       [{name:'games-list.txt',type:'txt',size:600,date:'05-08-2025',desc:'Steam games list.'}],
-};
+function esc(s){ return s.replace(/'/g,"\\'"); }
+function getItem(i){ return getFiltered()[i]; }
 
-// Sample preview content for text files (on S3 these will load from actual files)
-const FILE_PREVIEWS = {
-  'Class links.txt': `AWS Console: https://console.aws.amazon.com\nAWS Docs: https://docs.aws.amazon.com\nDocker Hub: https://hub.docker.com\nKubernetes Docs: https://kubernetes.io/docs\nJenkins: https://www.jenkins.io/doc\nPrometheus: https://prometheus.io/docs`,
-  'DevOps.txt': `DevOps = Development + Operations\n\nKey Principles:\n- Continuous Integration (CI)\n- Continuous Delivery (CD)\n- Infrastructure as Code (IaC)\n- Monitoring & Logging\n- Collaboration & Communication`,
-  'README.md': `# DevOps & Cloud Resource Center\n\nThis is the E:\\ Class Drive file portal.\n\nHosted on Amazon S3 as a static website.\n\n## Contents\n- AWS Class materials\n- DevOps guides\n- Linux tutorials\n- Scripts and configs`,
-  'lamp aws.txt': `LAMP Stack on AWS:\n1. Launch EC2 (Ubuntu 22.04)\n2. sudo apt update && sudo apt upgrade -y\n3. sudo apt install apache2 -y\n4. sudo apt install mysql-server -y\n5. sudo apt install php libapache2-mod-php -y\n6. sudo systemctl restart apache2`,
-};
-
-// ══════════════════════════════════════════════════════
-// HANDLE OPEN — routes folder vs file
-// ══════════════════════════════════════════════════════
-function handleOpen(name){
-  const item=ALL_ITEMS.find(x=>x.name===name);
-  if(!item)return;
-  if(item.type==='dir') openFolder(name);
-  else openFilePreview(name);
+function handleOpen(i){
+  const item=getItem(i);
+  if(!item) return;
+  if(item.type==='dir'){ openFolder(item); return; }
+  openFilePreview(item);
+}
+function handleSave(i){
+  const item=getItem(i); if(!item||item.type==='dir') return; doDownload(item);
+}
+function handleInfo(i){
+  const item=getItem(i); if(!item) return; openFileInfo(item);
 }
 
-// ══════════════════════════════════════════════════════
-// OPEN FOLDER — shows files inside the folder
-// ══════════════════════════════════════════════════════
-function openFolder(folderName){
-  const folder=ALL_ITEMS.find(x=>x.name===folderName&&x.type==='dir');
-  if(!folder)return;
-  const contents=FOLDER_CONTENTS[folderName]||[];
-  document.getElementById('folderModalTitle').innerHTML=`📁 ${folderName}`;
+// ═══════════════════════════════════════════
+// FILE PREVIEW
+// ═══════════════════════════════════════════
+async function openFilePreview(item){
+  const ext=getExt(item.name);
+  document.getElementById('fmTitle').innerHTML=getIcon(item)+' '+item.name;
+  const fileUrl=S3_BASE_URL+encodeURIComponent(item.name);
 
-  let html=`
-    <div class="folder-breadcrumb">
-      <span class="bc-item" onclick="closeModal('folderModal')">🏠 Home</span>
-      <span class="bc-sep">›</span>
-      <span class="bc-current">📁 ${folderName}</span>
-    </div>
-    <div style="background:var(--primary-bg);border:1px solid #bfdbfe;border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px">
-      📂 <strong>${contents.length} file${contents.length!==1?'s':''}</strong> inside this folder &nbsp;·&nbsp; ${folder.date}
-    </div>`;
-
-  if(contents.length===0){
-    html+=`<div class="folder-inside-empty">📭 This folder is empty or not yet uploaded to S3.<br><small style="color:var(--muted2)">Upload files to S3 under: <code>${folderName}/</code></small></div>`;
-  } else {
-    html+=`<div class="folder-inside-grid">`;
-    contents.forEach(item=>{
-      const n=item.name.replace(/'/g,"\\'");
-      html+=`<div class="file-card" style="padding:14px 12px 10px">
-        <span class="file-type-badge ${gt(item.type)}" style="top:8px;right:8px">${item.type.toUpperCase()}</span>
-        <span class="file-card-icon" style="font-size:26px;margin-bottom:8px">${gi(item.type)}</span>
-        <div class="file-card-name" style="font-size:11.5px">${item.name}</div>
-        <div class="file-card-meta">${item.date} · ${fmtSize(item.size)}</div>
-        <div class="card-actions-3" style="margin-top:8px">
-          <button class="card-btn card-btn-open" onclick="openFolderFilePreview('${folderName}','${n}')">📄 Open</button>
-          <button class="card-btn card-btn-dl" onclick="doDownloadPath('${folderName}','${n}')">⬇ Save</button>
-          <button class="card-btn card-btn-view" onclick="openFolderFileInfo('${folderName}','${n}')">ℹ️ Info</button>
-        </div>
-      </div>`;
-    });
-    html+=`</div>`;
-  }
-  document.getElementById('folderModalContent').innerHTML=html;
-  openModal('folderModal');
-}
-
-function openFolderFilePreview(folderName, fileName){
-  const contents=FOLDER_CONTENTS[folderName]||[];
-  const item=contents.find(x=>x.name===fileName);
-  if(!item)return;
-  // Build a temporary full path preview
-  const previewItem={...item, fullPath: folderName+'/'+fileName};
-  showFilePreviewModal(item, folderName+'/'+fileName);
-}
-
-function openFolderFileInfo(folderName, fileName){
-  const contents=FOLDER_CONTENTS[folderName]||[];
-  const item=contents.find(x=>x.name===fileName);
-  if(!item)return;
-  showFileInfoModal(item, folderName+'/'+fileName);
-}
-
-function doDownloadPath(folderName, fileName){
-  const link=document.createElement('a');
-  link.href=S3_BASE_URL+encodeURIComponent(folderName)+'/'+encodeURIComponent(fileName);
-  link.download=fileName;link.target='_blank';
-  document.body.appendChild(link);link.click();document.body.removeChild(link);
-  showToast('⬇️ Downloading "'+fileName+'"…','success');
-}
-
-// ══════════════════════════════════════════════════════
-// OPEN FILE PREVIEW
-// ══════════════════════════════════════════════════════
-function openFilePreview(name){
-  const item=ALL_ITEMS.find(x=>x.name===name);
-  if(!item)return;
-  showFilePreviewModal(item, name);
-}
-
-function showFilePreviewModal(item, fullPath){
-  document.getElementById('fileModalTitle').innerHTML=gi(item.type)+' '+item.name;
-  const previewContent=FILE_PREVIEWS[item.name];
-  const canPreview=['txt','sh','md','html','log'].includes(item.type);
   let previewHtml='';
-  if(canPreview){
-    if(previewContent){
-      previewHtml=`<div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em">📄 File Preview</div>
-      <div class="file-preview-box"><pre>${previewContent.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></div>`;
-    } else {
-      previewHtml=`<div class="file-preview-box"><div class="preview-placeholder"><div class="prev-icon">${gi(item.type)}</div><p><strong>${item.name}</strong></p><p style="margin-top:8px;font-size:12px">Preview loads from S3 when hosted.<br>On S3, this will show the actual file contents.</p></div></div>`;
-    }
-  } else if(item.type==='png'){
-    previewHtml=`<div class="file-preview-box" style="background:#f8fafc"><div class="preview-placeholder"><div class="prev-icon">🖼️</div><p><strong>${item.name}</strong></p><p style="margin-top:8px;font-size:12px">Image preview — click Save to download.</p></div></div>`;
+  if(PREVIEWABLE.includes(ext)){
+    previewHtml=`<div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Preview</div>
+      <div class="preview-box" id="previewContent"><div class="prev-ph"><div class="phi">⏳</div><p>Loading preview…</p></div></div>`;
+  } else if(['png','jpg','jpeg','gif','webp','svg'].includes(ext)){
+    previewHtml=`<div class="preview-box" style="background:#f8fafc;text-align:center"><img src="${fileUrl}" style="max-width:100%;max-height:260px;border-radius:6px" onerror="this.parentElement.innerHTML='<div class=\\'prev-ph\\'><div class=\\'phi\\'>🖼️</div><p>Image preview not available.<br>Click Open to view.</p></div>'"></div>`;
   } else {
-    previewHtml=`<div class="file-preview-box"><div class="preview-placeholder"><div class="prev-icon">${gi(item.type)}</div><p><strong>${item.name}</strong></p><p style="margin-top:8px;font-size:12px">${item.type.toUpperCase()} files open in their native app when downloaded.</p></div></div>`;
+    previewHtml=`<div class="preview-box"><div class="prev-ph"><div class="phi">${getIcon(item)}</div><p><strong>${item.name}</strong></p><p style="font-size:11px;margin-top:6px">${ext.toUpperCase()} files open in their native application.</p></div></div>`;
   }
 
-  document.getElementById('fileModalContent').innerHTML=`
-    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-      <span class="file-type-badge ${gt(item.type)}" style="position:static;font-size:10px;padding:3px 10px">${item.type.toUpperCase()}</span>
-      <span style="font-size:12px;color:var(--muted);align-self:center">📅 ${item.date}</span>
-      <span style="font-size:12px;color:var(--muted);align-self:center">📦 ${fmtSize(item.size)}</span>
-      <span style="font-size:12px;color:var(--muted);align-self:center;font-family:monospace">📍 E:\\ ${fullPath}</span>
+  document.getElementById('fmContent').innerHTML=`
+    <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+      <span class="ftbadge ${getTB(item)}" style="position:static;font-size:9px;padding:3px 8px">${ext.toUpperCase()}</span>
+      <span style="font-size:11px;color:var(--muted)">📅 ${fmtDate(item.date)}</span>
+      <span style="font-size:11px;color:var(--muted)">📦 ${fmtSize(item.size)}</span>
+      <span style="font-size:11px;color:var(--muted);font-family:monospace;word-break:break-all">🔗 ${item.fullKey}</span>
     </div>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--text2)">${item.desc}</div>
     ${previewHtml}
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="dl-btn-big" style="flex:1;min-width:140px" onclick="doDownload('${item.name.replace(/'/g,"\\'")}')">⬇️ Save / Download</button>
-      <button class="dl-btn-big" style="flex:1;min-width:140px;background:linear-gradient(135deg,var(--primary),#2563eb)" onclick="window.open(S3_BASE_URL+encodeURIComponent('${item.name.replace(/'/g,"\\'")}'),'_blank')">🔗 Open in Browser</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn-big btn-big-dl" style="flex:1;min-width:130px" onclick="doDownload(getFiltered()[currentPreviewIdx])">⬇️ Download / Save</button>
+      <button class="btn-big btn-big-open" style="flex:1;min-width:130px" onclick="window.open('${fileUrl}','_blank')">🔗 Open in Browser</button>
     </div>`;
-  openModal('fileModal');
-}
 
-// ══════════════════════════════════════════════════════
-// FILE DETAIL (Info only — no preview)
-// ══════════════════════════════════════════════════════
-function openFileDetail(name){
-  const item=ALL_ITEMS.find(x=>x.name===name);
-  if(!item)return;
-  if(item.type==='dir'){
-    showFolderInfoModal(item);
-  } else {
-    showFileInfoModal(item, name);
+  // Store index for download button
+  currentPreviewIdx = getFiltered().findIndex(x=>x.fullKey===item.fullKey);
+  openMod('fileModal');
+
+  // Load text preview async
+  if(PREVIEWABLE.includes(ext)){
+    try {
+      const r = await fetch(fileUrl);
+      if(!r.ok) throw new Error();
+      const txt = await r.text();
+      const el  = document.getElementById('previewContent');
+      if(el) el.innerHTML=`<pre>${txt.substring(0,3000).replace(/</g,'&lt;').replace(/>/g,'&gt;')}${txt.length>3000?'\n\n... (truncated)':''}</pre>`;
+    } catch {
+      const el=document.getElementById('previewContent');
+      if(el) el.innerHTML=`<div class="prev-ph"><div class="phi">${getIcon(item)}</div><p>Preview unavailable. File may require CORS headers on S3.</p></div>`;
+    }
   }
 }
+let currentPreviewIdx=0;
 
-function showFolderInfoModal(item){
-  const contents=FOLDER_CONTENTS[item.name]||[];
-  document.getElementById('fileModalTitle').innerHTML='📁 '+item.name;
-  document.getElementById('fileModalContent').innerHTML=`
-    <div class="detail-info-grid">
-      <div class="detail-info-item"><div class="detail-info-label">Type</div><div class="detail-info-val"><span class="file-type-badge tb-dir" style="position:static">FOLDER</span></div></div>
-      <div class="detail-info-item"><div class="detail-info-label">Last Modified</div><div class="detail-info-val">${item.date}</div></div>
-      <div class="detail-info-item"><div class="detail-info-label">Files Inside</div><div class="detail-info-val">${contents.length} files</div></div>
-      <div class="detail-info-item"><div class="detail-info-label">S3 Prefix</div><div class="detail-info-val" style="font-size:11px;font-family:monospace">${item.name}/</div></div>
+// ═══════════════════════════════════════════
+// FILE INFO
+// ═══════════════════════════════════════════
+function openFileInfo(item){
+  const ext=getExt(item.name);
+  const fileUrl=S3_BASE_URL+encodeURIComponent(item.name);
+  document.getElementById('fmTitle').innerHTML=(item.type==='dir'?'📁':'ℹ️ ')+item.name;
+  document.getElementById('fmContent').innerHTML=`
+    <div class="di-grid">
+      <div class="di-item"><div class="di-lbl">Type</div><div class="di-val"><span class="ftbadge ${getTB(item)}" style="position:static">${item.type==='dir'?'FOLDER':ext.toUpperCase()}</span></div></div>
+      <div class="di-item"><div class="di-lbl">Modified</div><div class="di-val">${fmtDate(item.date)}</div></div>
+      <div class="di-item"><div class="di-lbl">Size</div><div class="di-val">${fmtSize(item.size)}</div></div>
+      <div class="di-item"><div class="di-lbl">S3 Key</div><div class="di-val" style="font-size:10px;font-family:monospace;word-break:break-all">${item.fullKey}</div></div>
     </div>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--text2)">${item.desc}</div>
-    <button class="dl-btn-big" style="background:linear-gradient(135deg,var(--folder),#f59e0b)" onclick="closeModal('fileModal');openFolder('${item.name.replace(/'/g,"\\'")}')">📂 Open This Folder</button>`;
-  openModal('fileModal');
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px;margin-bottom:12px;font-size:12px;color:var(--text2)">
+      <strong>Full URL:</strong><br><a href="${fileUrl}" target="_blank" style="color:var(--primary);font-size:11px;word-break:break-all">${fileUrl}</a>
+    </div>
+    ${item.type==='dir'?
+      `<button class="btn-big btn-big-folder" onclick="closeMod('fileModal');openFolder(currentItems.find(x=>x.fullKey==='${item.fullKey}'))">📂 Open This Folder</button>`:
+      `<div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-big btn-big-dl" style="flex:1;min-width:130px" onclick="doDownload(currentItems.find(x=>x.fullKey==='${item.fullKey}'))">⬇️ Download / Save</button>
+        <button class="btn-big btn-big-open" style="flex:1;min-width:130px" onclick="openFilePreview(currentItems.find(x=>x.fullKey==='${item.fullKey}'));closeMod('fileModal')">📄 Preview</button>
+      </div>`}
+  `;
+  openMod('fileModal');
 }
 
-function showFileInfoModal(item, fullPath){
-  document.getElementById('fileModalTitle').innerHTML=gi(item.type)+' '+item.name+' — Info';
-  document.getElementById('fileModalContent').innerHTML=`
-    <div class="detail-info-grid">
-      <div class="detail-info-item"><div class="detail-info-label">File Type</div><div class="detail-info-val"><span class="file-type-badge ${gt(item.type)}" style="position:static">${item.type.toUpperCase()}</span></div></div>
-      <div class="detail-info-item"><div class="detail-info-label">Last Modified</div><div class="detail-info-val">${item.date}</div></div>
-      <div class="detail-info-item"><div class="detail-info-label">Size</div><div class="detail-info-val">${fmtSize(item.size)}</div></div>
-      <div class="detail-info-item"><div class="detail-info-label">Location</div><div class="detail-info-val" style="font-size:11px;font-family:monospace">E:\\ ${fullPath||item.name}</div></div>
-    </div>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--text2)">${item.desc}</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="dl-btn-big" style="flex:1;min-width:140px" onclick="doDownload('${item.name.replace(/'/g,"\\'")}')">⬇️ Save / Download</button>
-      <button class="dl-btn-big" style="flex:1;min-width:140px;background:linear-gradient(135deg,#ea580c,#f97316)" onclick="openFilePreview('${item.name.replace(/'/g,"\\'")}');closeModal('fileModal')">📄 Preview File</button>
-    </div>`;
-  openModal('fileModal');
-}
-
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // DOWNLOAD
-// ══════════════════════════════════════════════════════
-function doDownload(name){
-  const item=ALL_ITEMS.find(x=>x.name===name);
-  if(!item||item.type==='dir'){showToast('Folders cannot be downloaded directly.','error');return;}
-  const link=document.createElement('a');
-  link.href=S3_BASE_URL+encodeURIComponent(name);
-  link.download=name;link.target='_blank';
-  document.body.appendChild(link);link.click();document.body.removeChild(link);
-  showToast('⬇️ Downloading "'+name+'"…','success');
+// ═══════════════════════════════════════════
+function doDownload(item){
+  if(!item||item.type==='dir'){ showToast('Cannot download folders directly','error'); return; }
+  const url = `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${item.fullKey}`;
+  const a=document.createElement('a');
+  a.href=url; a.download=item.name; a.target='_blank';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  showToast('⬇️ Downloading "'+item.name+'"…','success');
 }
 
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// ADMIN PANEL
+// ═══════════════════════════════════════════
+function renderAdminPanel(){
+  document.getElementById('limBadge').innerHTML='Users: <strong>'+USERS.length+' / '+USER_LIMIT+'</strong>';
+  const rows=USERS.map(u=>`<tr>
+    <td><div class="td-u"><div class="td-av">${u.name[0]}</div><div><div class="td-nm">${u.name}</div><div class="td-un">@${u.username}</div></div></div></td>
+    <td><span class="acc-badge">🗂️ ${u.access.length} items</span></td>
+    <td>${u.access.slice(0,2).map(a=>`<span style="font-size:10px;background:#f0f9ff;border:1px solid #bae6fd;color:#0c4a6e;padding:1px 6px;border-radius:9px;margin-right:3px;display:inline-block;margin-bottom:2px">${a.length>20?a.slice(0,20)+'…':a}</span>`).join('')}${u.access.length>2?`<span style="font-size:10px;color:var(--muted)">+${u.access.length-2}</span>`:''}</td>
+    <td><div style="display:flex;gap:5px"><button class="btn-sm bp" onclick="openAccess('${u.id}')">🔑 Access</button><button class="btn-sm bd" onclick="delUser('${u.id}')">🗑️</button></div></td>
+  </tr>`).join('');
+  document.getElementById('userTable').innerHTML=`<thead><tr><th>User</th><th>Access</th><th>Assigned</th><th>Actions</th></tr></thead><tbody>${rows||'<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">No users yet.</td></tr>'}</tbody>`;
+}
+function openAddUser(){
+  if(USERS.length>=USER_LIMIT){ showToast('User limit ('+USER_LIMIT+') reached. Edit USER_LIMIT in code.','error'); return; }
+  ['nName','nUser','nPass'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('addErr').style.display='none';
+  openMod('addModal');
+}
+function saveUser(){
+  const name=document.getElementById('nName').value.trim();
+  const uname=document.getElementById('nUser').value.trim().toLowerCase();
+  const pass=document.getElementById('nPass').value.trim();
+  const err=document.getElementById('addErr');
+  if(!name||!uname||!pass){ err.textContent='Fill all fields.'; err.style.display='block'; return; }
+  if(USERS.find(x=>x.username===uname)||uname==='admin'){ err.textContent='Username exists.'; err.style.display='block'; return; }
+  USERS.push({id:'u'+Date.now(),username:uname,password:pass,name,access:[]});
+  closeMod('addModal'); renderAdminPanel(); showToast('✅ User "'+name+'" created!','success');
+}
+function delUser(id){
+  if(!confirm('Delete this user?')) return;
+  USERS=USERS.filter(x=>x.id!==id); renderAdminPanel(); showToast('User deleted.','');
+}
+
+// ═══════════════════════════════════════════
+// ACCESS CONTROL — uses live S3 items
+// ═══════════════════════════════════════════
+function openAccess(uid){
+  const user=USERS.find(x=>x.id===uid);
+  editingUID=uid; tempAccess=[...user.access];
+  document.getElementById('accTitle').textContent='🔑 Access for '+user.name+' (@'+user.username+')';
+  const folders=allS3Items.filter(x=>x.type==='dir');
+  const files=allS3Items.filter(x=>x.type!=='dir');
+  function mkCb(item){
+    const chk=tempAccess.includes(item.name)?'checked':'';
+    return`<label class="cbi ${chk?'checked':''}"><input type="checkbox" ${chk} onchange="toggleAcc('${esc(item.name)}',this)"><span>${getIcon(item)}</span><span class="cbi-name" title="${item.name}">${item.name}</span></label>`;
+  }
+  document.getElementById('accContent').innerHTML=`
+    <div style="display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap">
+      <button class="btn-sm bs" onclick="selAll()">✅ All</button>
+      <button class="btn-sm bd" onclick="clrAll()">❌ Clear</button>
+      <span style="font-size:11px;color:var(--muted);align-self:center" id="accCount">${tempAccess.length} selected</span>
+    </div>
+    <div class="acc-section">📁 Folders (${folders.length})</div>
+    <div class="cb-grid">${folders.map(mkCb).join('')}</div>
+    <div class="acc-section">📄 Files (${files.length})</div>
+    <div class="cb-grid">${files.map(mkCb).join('')}</div>`;
+  openMod('accModal');
+}
+function toggleAcc(name,el){
+  const lbl=el.closest('.cbi');
+  if(el.checked){if(!tempAccess.includes(name))tempAccess.push(name);lbl.classList.add('checked');}
+  else{tempAccess=tempAccess.filter(x=>x!==name);lbl.classList.remove('checked');}
+  document.getElementById('accCount').textContent=tempAccess.length+' selected';
+}
+function selAll(){ tempAccess=allS3Items.map(x=>x.name); document.querySelectorAll('#accContent .cbi input').forEach(cb=>{cb.checked=true;cb.closest('.cbi').classList.add('checked');}); document.getElementById('accCount').textContent=tempAccess.length+' selected'; }
+function clrAll(){ tempAccess=[]; document.querySelectorAll('#accContent .cbi input').forEach(cb=>{cb.checked=false;cb.closest('.cbi').classList.remove('checked');}); document.getElementById('accCount').textContent='0 selected'; }
+function saveAccess(){
+  const user=USERS.find(x=>x.id===editingUID);
+  user.access=[...tempAccess]; closeMod('accModal'); renderAdminPanel();
+  showToast('✅ Access saved for '+user.name,'success');
+}
+
+// ═══════════════════════════════════════════
+// S3 STATUS BAR
+// ═══════════════════════════════════════════
+function setS3Status(type, msg){
+  const bar=document.getElementById('s3Status');
+  const dot=document.getElementById('s3Dot');
+  const txt=document.getElementById('s3Msg');
+  bar.className='s3-status '+type;
+  txt.textContent=msg;
+  if(type==='loading'){ dot.className='s3-dot spin'; }
+  else if(type==='success'){ dot.className='s3-dot green'; }
+  else { dot.className='s3-dot red'; }
+}
+function showSkeleton(){
+  document.getElementById('explorerCont').className='skel-grid';
+  document.getElementById('explorerCont').innerHTML=Array(6).fill(`<div class="skel-card"><div class="skel-line" style="width:40px;height:36px;margin-bottom:12px"></div><div class="skel-line" style="width:90%"></div><div class="skel-line" style="width:60%"></div></div>`).join('');
+}
+
+// ═══════════════════════════════════════════
 // LIVE CLOCK
-// ══════════════════════════════════════════════════════
-function updateClock(){
-  const now=new Date();
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const hh=String(now.getHours()).padStart(2,'0');
-  const mm=String(now.getMinutes()).padStart(2,'0');
-  const ss=String(now.getSeconds()).padStart(2,'0');
-  document.getElementById('clockTime').textContent=`${hh}:${mm}:${ss}`;
-  document.getElementById('clockDate').textContent=`${days[now.getDay()]}, ${String(now.getDate()).padStart(2,'0')} ${months[now.getMonth()]} ${now.getFullYear()}`;
+// ═══════════════════════════════════════════
+function startClock(){
+  function tick(){
+    const n=new Date();
+    const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('clockT').textContent=
+      String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
+    document.getElementById('clockD').textContent=
+      days[n.getDay()]+', '+String(n.getDate()).padStart(2,'0')+' '+months[n.getMonth()]+' '+n.getFullYear();
+  }
+  tick(); setInterval(tick, 1000);
 }
-setInterval(updateClock,1000);
-updateClock();
 
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // MODALS & TOAST
-// ══════════════════════════════════════════════════════
-function openModal(id){document.getElementById(id).style.display='flex';}
-function closeModal(id,e){if(e&&e.target!==document.getElementById(id))return;document.getElementById(id).style.display='none';}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')['fileModal','folderModal','addUserModal','accessModal'].forEach(id=>{document.getElementById(id).style.display='none';});});
+// ═══════════════════════════════════════════
+function openMod(id){ document.getElementById(id).style.display='flex'; }
+function closeMod(id,e){ if(e&&e.target!==document.getElementById(id))return; document.getElementById(id).style.display='none'; }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape')['fileModal','folderModal','addModal','accModal'].forEach(id=>document.getElementById(id).style.display='none'); });
 
-let toastTimer;
+let toastTmr;
 function showToast(msg,type=''){
-  clearTimeout(toastTimer);
-  const ex=document.getElementById('toastEl');if(ex)ex.remove();
-  const t=document.createElement('div');t.id='toastEl';
-  t.className='toast '+(type||'');t.textContent=msg;
-  document.body.appendChild(t);
-  toastTimer=setTimeout(()=>t.remove(),3000);
+  clearTimeout(toastTmr);
+  const ex=document.getElementById('toastEl'); if(ex) ex.remove();
+  const t=document.createElement('div'); t.id='toastEl'; t.className='toast '+(type||''); t.textContent=msg;
+  document.body.appendChild(t); toastTmr=setTimeout(()=>t.remove(),3200);
 }
 </script>
 </body>
